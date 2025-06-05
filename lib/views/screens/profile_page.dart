@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:homedaily_mvvm/viewmodels/profile_viewmodel.dart';
 import 'package:provider/provider.dart';
+import 'package:homedaily_mvvm/views/screens/widgets/custom_bottom_navbar.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -106,57 +107,7 @@ class ProfilePage extends StatelessWidget {
                 ],
               ),
             ),
-            bottomNavigationBar: BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              items: const [
-                BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.search),
-                  label: 'Explore',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.receipt_long),
-                  label: 'Transaksi',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.shopping_cart),
-                  label: 'Cart',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.favorite_border),
-                  label: 'Wishlist',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person),
-                  label: 'Profile',
-                ),
-              ],
-              currentIndex: 5,
-              selectedItemColor: Colors.deepOrange,
-              unselectedItemColor: Colors.grey,
-              showUnselectedLabels: true,
-              onTap: (index) {
-                switch (index) {
-                  case 0:
-                    Navigator.pushNamed(context, '/home');
-                    break;
-                  case 1:
-                    Navigator.pushNamed(context, '/explore');
-                    break;
-                  case 2:
-                    Navigator.pushNamed(context, '/transaction');
-                    break;
-                  case 3:
-                    Navigator.pushNamed(context, '/cart');
-                    break;
-                  case 4:
-                    Navigator.pushNamed(context, '/wishlist');
-                    break;
-                  case 5:
-                    break;
-                }
-              },
-            ),
+            bottomNavigationBar: CustomBottomNavBar(currentIndex: 5),
           );
         },
       ),
