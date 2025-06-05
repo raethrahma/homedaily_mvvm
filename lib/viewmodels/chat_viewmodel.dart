@@ -14,9 +14,11 @@ class ChatViewModel extends ChangeNotifier {
       product: Product(
         id: '101',
         image: 'https://via.placeholder.com/150',
-        title: 'Product A',
-        description: 'This is a description for Product A.',
-        price: 'Rp 100.000',
+        title: 'Meja Minimalis',
+        description: 'Meja kayu berkualitas tinggi',
+        price: 'Rp 247.500',
+        type: 'Produk',
+        category: 'Produk',
       ),
     ),
     Chat(
@@ -29,9 +31,11 @@ class ChatViewModel extends ChangeNotifier {
       product: Product(
         id: '102',
         image: 'https://via.placeholder.com/150',
-        title: 'Product B',
-        description: 'This is a description for Product B.',
-        price: 'Rp 200.000',
+        title: 'Cleaning Service',
+        description: 'Jasa cleaning service profesional.',
+        price: 'Rp 500.000',
+        type: 'Jasa',
+        category: 'Jasa',
       ),
     ),
   ];

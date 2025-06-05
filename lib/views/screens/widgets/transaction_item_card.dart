@@ -23,23 +23,23 @@ class TransactionItem extends StatelessWidget {
             Text(
               transaction.product.title,
               style: const TextStyle(
-                fontFamily: 'CustomFont', // Menggunakan font kustom
+                fontFamily: 'Poppins',
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
               ),
             ),
             const SizedBox(height: 8),
             Text(
-              'Status: ${transaction.status}',
+              'Status: ${transaction.status.name}',
               style: const TextStyle(
-                fontFamily: 'CustomFont', // Menggunakan font kustom
+                fontFamily: 'Poppins',
                 color: Colors.grey,
               ),
             ),
             Text(
               transaction.price,
               style: const TextStyle(
-                fontFamily: 'CustomFont', // Menggunakan font kustom
+                fontFamily: 'Poppins',
                 color: Colors.deepOrange,
                 fontWeight: FontWeight.bold,
               ),
@@ -52,7 +52,7 @@ class TransactionItem extends StatelessWidget {
                 child: const Text(
                   'Buy Again',
                   style: TextStyle(
-                    fontFamily: 'CustomFont', // Menggunakan font kustom
+                    fontFamily: 'Poppins',
                     color: Colors.blue,
                   ),
                 ),

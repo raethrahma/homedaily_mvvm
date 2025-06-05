@@ -19,16 +19,15 @@ class TabButton extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color:
-              isSelected
-                  ? Colors.deepOrange.withOpacity(0.1)
-                  : Colors.transparent,
+          color: isSelected
+              ? Colors.deepOrange.withOpacity(0.1)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
           title,
           style: TextStyle(
-            fontFamily: 'CustomFont', // Menggunakan font kustom
+            fontFamily: 'Poppins', // Konsisten dengan font aplikasi
             color: isSelected ? Colors.deepOrange : Colors.grey,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
           ),

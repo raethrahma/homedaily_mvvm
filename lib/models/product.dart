@@ -1,9 +1,11 @@
 class Product {
-  final String id; // Tambahkan ID untuk identifikasi unik
+  final String id;
   final String image;
   final String title;
   final String description;
   final String price;
+  final String type; // 'Produk' atau 'Jasa'
+  final String category; // 'Produk' atau 'Jasa' saja
 
   Product({
     required this.id,
@@ -11,25 +13,29 @@ class Product {
     required this.title,
     required this.description,
     required this.price,
+    required this.type,
+    required this.category,
   });
 
-  factory Product.fromJson(Map<String, dynamic> json) {
+  Product copyWith({
+    String? id,
+    String? image,
+    String? title,
+    String? description,
+    String? price,
+    String? type,
+    String? category,
+  }) {
     return Product(
-      id: json['id'] as String,
-      image: json['image'] as String,
-      title: json['title'] as String,
-      description: json['description'] as String,
-      price: json['price'] as String,
+      id: id ?? this.id,
+      image: image ?? this.image,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      price: price ?? this.price,
+      type: type ?? this.type,
+      category: category ?? this.category,
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'image': image,
-      'title': title,
-      'description': description,
-      'price': price,
-    };
-  }
+  // Hapus factory fromJson dan toJson jika tidak menggunakan API/JSON
 }

@@ -1,10 +1,11 @@
 class Address {
-  final String id; // Tambahkan ID untuk identifikasi unik
+  final String id;
   final String name;
   final String phone;
   final String address;
   final String label;
   final String status;
+  final String type; // 'Rumah', 'Kantor', dll
 
   Address({
     required this.id,
@@ -13,27 +14,26 @@ class Address {
     required this.address,
     required this.label,
     required this.status,
+    required this.type,
   });
 
-  factory Address.fromJson(Map<String, dynamic> json) {
+  Address copyWith({
+    String? id,
+    String? name,
+    String? phone,
+    String? address,
+    String? label,
+    String? status,
+    String? type,
+  }) {
     return Address(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      phone: json['phone'] as String,
-      address: json['address'] as String,
-      label: json['label'] as String,
-      status: json['status'] as String,
+      id: id ?? this.id,
+      name: name ?? this.name,
+      phone: phone ?? this.phone,
+      address: address ?? this.address,
+      label: label ?? this.label,
+      status: status ?? this.status,
+      type: type ?? this.type,
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'phone': phone,
-      'address': address,
-      'label': label,
-      'status': status,
-    };
   }
 }

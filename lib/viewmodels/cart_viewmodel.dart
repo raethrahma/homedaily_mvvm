@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:homedaily_mvvm/models/cart_item.dart';
 
 class CartViewModel extends ChangeNotifier {
-  List<CartItem> _items = [
+  final List<CartItem> _items = [
     CartItem(
       id: '1',
       image: 'https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc',
       title: 'Meja Minimalis',
       price: '247.50',
       quantity: 1,
+      type: 'Produk', // Pastikan konsisten 'Produk'
     ),
     CartItem(
       id: '2',
@@ -16,41 +17,52 @@ class CartViewModel extends ChangeNotifier {
       title: 'Lampu Kuning Cantik',
       price: '247.50',
       quantity: 1,
+      type: 'Produk', // Pastikan konsisten 'Produk'
+    ),
+    CartItem(
+      id: '3',
+      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d',
+      title: 'Cleaning Service',
+      price: '500.00',
+      quantity: 1,
+      type: 'Jasa', // Pastikan konsisten 'Jasa'
     ),
   ];
 
-  String _selectedFilter = 'All';
-  List<String> _filters = ['All', 'Furniture', 'Lampu', 'Dekorasi'];
-  List<CartItem> _filteredItems = [];
+  String _selectedFilter = 'Produk';
+  final List<String> _filters = ['Produk', 'Jasa'];
 
-  CartViewModel() {
-    _filteredItems = _items;
+  List<CartItem> get filteredCartItems {
+    return _items.where((item) => item.type == _selectedFilter).toList();
   }
 
-  List<CartItem> get filteredItems => _filteredItems;
   List<String> get filters => _filters;
   String get selectedFilter => _selectedFilter;
 
   void updateFilter(String filter) {
-    _selectedFilter = filter;
-    if (filter == 'All') {
-      _filteredItems = _items;
-    } else {
-      _filteredItems =
-          _items
-              .where(
-                (item) =>
-                    item.title.toLowerCase().contains(filter.toLowerCase()),
-              )
-              .toList();
+    if (_filters.contains(filter)) {
+      _selectedFilter = filter;
+      notifyListeners();
     }
+  }
+
+  void removeFromCart(CartItem item) {
+    _items.remove(item);
     notifyListeners();
   }
 
+  void updateQuantity(CartItem item, int qty) {
+    final index = _items.indexOf(item);
+    if (index != -1 && qty > 0) {
+      _items[index] = _items[index].copyWith(quantity: qty);
+      notifyListeners();
+    }
+  }
+
   String getTotal() {
-    double total = _filteredItems.fold(
+    double total = filteredCartItems.fold(
       0,
-      (sum, item) => sum + (double.parse(item.price) * item.quantity),
+      (sum, item) => sum + (double.tryParse(item.price) ?? 0 * item.quantity),
     );
     return 'Rp ${total.toStringAsFixed(2)}';
   }

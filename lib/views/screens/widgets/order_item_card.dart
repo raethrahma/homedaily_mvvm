@@ -17,12 +17,11 @@ class OrderItemCard extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Image.network(
-                cartItem.image, // Menggunakan properti `image` dari CartItem
+                cartItem.image,
                 width: 80,
                 height: 80,
                 fit: BoxFit.cover,
-                errorBuilder:
-                    (context, error, stackTrace) => const Icon(Icons.error),
+                errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
               ),
             ),
             const SizedBox(width: 16),
@@ -31,25 +30,24 @@ class OrderItemCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    cartItem
-                        .title, // Menggunakan properti `title` dari CartItem
+                    cartItem.title,
                     style: const TextStyle(
-                      fontFamily: 'CustomFont', // Menggunakan font kustom
+                      fontFamily: 'Poppins',
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
                   ),
                   Text(
-                    'Qty: ${cartItem.quantity}', // Menggunakan properti `quantity` dari CartItem
+                    'Qty: ${cartItem.quantity}',
                     style: const TextStyle(
-                      fontFamily: 'CustomFont', // Menggunakan font kustom
+                      fontFamily: 'Poppins',
                       color: Colors.grey,
                     ),
                   ),
                   Text(
-                    'Rp ${cartItem.price}', // Menggunakan properti `price` dari CartItem
+                    'Rp ${cartItem.price}',
                     style: const TextStyle(
-                      fontFamily: 'CustomFont', // Menggunakan font kustom
+                      fontFamily: 'Poppins',
                       color: Colors.deepOrange,
                       fontWeight: FontWeight.bold,
                     ),

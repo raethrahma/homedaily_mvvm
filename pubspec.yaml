@@ -12,7 +12,7 @@ dependencies:
     sdk: flutter
   intl: ^0.17.0
   cupertino_icons: ^1.0.8
-  google_fonts: ^2.3.2 # Menambahkan pustaka google_fonts
+  google_fonts: ^6.1.0 # Menambahkan pustaka google_fonts
   provider: ^6.0.5 # Menambahkan pustaka provider
 
 dev_dependencies:

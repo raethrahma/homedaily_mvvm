@@ -17,7 +17,7 @@ class ProfilePage extends StatelessWidget {
               title: const Text(
                 'Profile',
                 style: TextStyle(
-                  fontFamily: 'CustomFont', // Menggunakan font kustom
+                  fontFamily: 'Poppins',
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
@@ -44,8 +44,7 @@ class ProfilePage extends StatelessWidget {
                             Text(
                               viewModel.userName,
                               style: const TextStyle(
-                                fontFamily:
-                                    'CustomFont', // Menggunakan font kustom
+                                fontFamily: 'Poppins',
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18,
                               ),
@@ -53,8 +52,7 @@ class ProfilePage extends StatelessWidget {
                             Text(
                               viewModel.userEmail,
                               style: TextStyle(
-                                fontFamily:
-                                    'CustomFont', // Menggunakan font kustom
+                                fontFamily: 'Poppins',
                                 color: Colors.grey[600],
                               ),
                             ),
@@ -72,7 +70,7 @@ class ProfilePage extends StatelessWidget {
                     title: const Text(
                       'Manage Addresses',
                       style: TextStyle(
-                        fontFamily: 'CustomFont', // Menggunakan font kustom
+                        fontFamily: 'Poppins',
                       ),
                     ),
                     onTap: () {
@@ -87,7 +85,7 @@ class ProfilePage extends StatelessWidget {
                     title: const Text(
                       'Settings',
                       style: TextStyle(
-                        fontFamily: 'CustomFont', // Menggunakan font kustom
+                        fontFamily: 'Poppins',
                       ),
                     ),
                     onTap: viewModel.openSettings,
@@ -97,7 +95,7 @@ class ProfilePage extends StatelessWidget {
                     title: const Text(
                       'Logout',
                       style: TextStyle(
-                        fontFamily: 'CustomFont', // Menggunakan font kustom
+                        fontFamily: 'Poppins',
                       ),
                     ),
                     onTap: () {

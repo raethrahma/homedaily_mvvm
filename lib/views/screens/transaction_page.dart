@@ -16,11 +16,11 @@ class TransactionPage extends StatelessWidget {
         builder: (context, viewModel, child) {
           return Scaffold(
             appBar: AppBar(
-              backgroundColor: Colors.deepOrange,
+              backgroundColor: Colors.orange,
               title: const Text(
-                'HomeDaily',
+                'Transaksi',
                 style: TextStyle(
-                  fontFamily: 'CustomFont', // Menggunakan font kustom
+                  fontFamily: 'Poppins',
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
@@ -41,29 +41,40 @@ class TransactionPage extends StatelessWidget {
                         onTap: () => viewModel.selectTab('Semua Status'),
                       ),
                       TabButton(
-                        title: 'Semua Produk',
-                        isSelected: viewModel.selectedTab == 'Semua Produk',
-                        onTap: () => viewModel.selectTab('Semua Produk'),
+                        title: 'Produk',
+                        isSelected: viewModel.selectedTab == 'Produk',
+                        onTap: () => viewModel.selectTab('Produk'),
                       ),
                       TabButton(
-                        title: 'Semua Tanggal',
-                        isSelected: viewModel.selectedTab == 'Semua Tanggal',
-                        onTap: () => viewModel.selectTab('Semua Tanggal'),
+                        title: 'Jasa',
+                        isSelected: viewModel.selectedTab == 'Jasa',
+                        onTap: () => viewModel.selectTab('Jasa'),
                       ),
                     ],
                   ),
                 ),
                 Expanded(
-                  child: ListView.builder(
-                    itemCount: viewModel.transactions.length,
-                    itemBuilder: (context, index) {
-                      final transaction = viewModel.transactions[index];
-                      return TransactionItem(
-                        transaction: transaction,
-                        onBuyAgain: () => viewModel.buyAgain(transaction),
-                      );
-                    },
-                  ),
+                  child: viewModel.filteredTransactions.isEmpty
+                      ? const Center(
+                          child: Text(
+                            'Belum ada transaksi.',
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 16,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        )
+                      : ListView.builder(
+                          itemCount: viewModel.filteredTransactions.length,
+                          itemBuilder: (context, index) {
+                            final transaction = viewModel.filteredTransactions[index];
+                            return TransactionItem(
+                              transaction: transaction,
+                              onBuyAgain: () => viewModel.buyAgain(transaction),
+                            );
+                          },
+                        ),
                 ),
               ],
             ),

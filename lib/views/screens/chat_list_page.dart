@@ -17,69 +17,93 @@ class ChatListPage extends StatelessWidget {
               title: const Text(
                 'Chats',
                 style: TextStyle(
-                  fontFamily: 'CustomFont', // Menggunakan font kustom
+                  fontFamily: 'Poppins',
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
+                  fontSize: 20,
                 ),
               ),
-              backgroundColor: Colors.deepOrange,
+              backgroundColor: Colors.orange,
+              centerTitle: true,
+              elevation: 0,
+              iconTheme: const IconThemeData(color: Colors.white),
             ),
+            backgroundColor: Colors.grey[50],
             body: ListView.builder(
               padding: const EdgeInsets.all(16),
               itemCount: viewModel.sellers.length,
               itemBuilder: (context, index) {
                 final chat = viewModel.sellers[index];
-                return ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: NetworkImage(chat.image),
+                return Card(
+                  color: Colors.white,
+                  elevation: 2,
+                  margin: const EdgeInsets.only(bottom: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  title: Text(
-                    chat.name,
-                    style: const TextStyle(
-                      fontFamily: 'CustomFont', // Menggunakan font kustom
-                      fontWeight: FontWeight.bold,
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundImage: NetworkImage(chat.image),
+                      radius: 26,
                     ),
-                  ),
-                  subtitle: Text(
-                    chat.lastMessage,
-                    style: TextStyle(
-                      fontFamily: 'CustomFont', // Menggunakan font kustom
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                  trailing: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        chat.time,
-                        style: const TextStyle(
-                          fontFamily: 'CustomFont', // Menggunakan font kustom
-                          fontSize: 12,
-                        ),
+                    title: Text(
+                      chat.name,
+                      style: const TextStyle(
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: Colors.black87,
                       ),
-                      if (chat.unread > 0)
-                        CircleAvatar(
-                          backgroundColor: Colors.red,
-                          radius: 10,
-                          child: Text(
-                            chat.unread.toString(),
-                            style: const TextStyle(
-                              fontFamily:
-                                  'CustomFont', // Menggunakan font kustom
-                              color: Colors.white,
-                              fontSize: 10,
-                            ),
+                    ),
+                    subtitle: Text(
+                      chat.lastMessage,
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        color: Colors.grey[600],
+                        fontSize: 13,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    trailing: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          chat.time,
+                          style: const TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 12,
+                            color: Colors.grey,
                           ),
                         ),
-                    ],
+                        if (chat.unread > 0)
+                          Container(
+                            margin: const EdgeInsets.only(top: 4),
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(
+                              chat.unread.toString(),
+                              style: const TextStyle(
+                                fontFamily: 'Poppins',
+                                color: Colors.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        '/chat_detail',
+                        arguments: chat,
+                      );
+                    },
                   ),
-                  onTap: () {
-                    Navigator.pushNamed(
-                      context,
-                      '/chat_detail',
-                      arguments: chat.product.toJson(),
-                    );
-                  },
                 );
               },
             ),

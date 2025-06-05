@@ -9,28 +9,31 @@ class ChatDetailViewModel extends ChangeNotifier {
   final List<ChatMessage> _messages = [];
 
   ChatDetailViewModel({required this.product}) {
+    // Pesan awal: info produk
     _messages.add(
       ChatMessage(
-        id: '1', // Tambahkan ID unik untuk setiap pesan
-        text: '',
-        time: '00:00',
-        isMe: true,
+        id: '1',
+        text: 'Produk: ${product.title}\nHarga: Rp ${product.price}',
+        time: DateFormat('HH:mm').format(DateTime.now()),
+        isMe: false,
         product: product,
       ),
     );
+    // Contoh pesan user
     _messages.add(
       ChatMessage(
-        id: '2', // Tambahkan ID unik untuk setiap pesan
-        text: 'Ini produknya ya?',
-        time: '00:49',
+        id: '2',
+        text: 'Apakah produk ini ready?',
+        time: DateFormat('HH:mm').format(DateTime.now()),
         isMe: true,
       ),
     );
+    // Contoh balasan
     _messages.add(
       ChatMessage(
-        id: '3', // Tambahkan ID unik untuk setiap pesan
-        text: 'Iya, produk ${product.title} harga Rp.1000',
-        time: '01:52',
+        id: '3',
+        text: 'Iya, produk ${product.title} masih tersedia.',
+        time: DateFormat('HH:mm').format(DateTime.now()),
         isMe: false,
       ),
     );
@@ -40,13 +43,12 @@ class ChatDetailViewModel extends ChangeNotifier {
   List<ChatMessage> get messages => _messages;
 
   void sendMessage() {
-    if (_messageController.text.isNotEmpty) {
+    final text = _messageController.text.trim();
+    if (text.isNotEmpty) {
       _messages.add(
         ChatMessage(
-          id:
-              DateTime.now().millisecondsSinceEpoch
-                  .toString(), // ID unik berdasarkan timestamp
-          text: _messageController.text,
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          text: text,
           time: DateFormat('HH:mm').format(DateTime.now()),
           isMe: true,
         ),

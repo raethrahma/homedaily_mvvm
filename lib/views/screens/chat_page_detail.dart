@@ -1,120 +1,74 @@
 import 'package:flutter/material.dart';
-import 'package:homedaily_mvvm/models/product.dart';
-import 'package:homedaily_mvvm/viewmodels/chat_detail_viewmodel.dart';
-import 'package:provider/provider.dart';
+import 'package:homedaily_mvvm/models/chat.dart';
 
-class ChatPageDetail extends StatelessWidget {
-  final Product product;
+class ChatDetailPage extends StatelessWidget {
+  final Chat chat;
 
-  const ChatPageDetail({super.key, required this.product});
+  const ChatDetailPage({super.key, required this.chat});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => ChatDetailViewModel(product: product),
-      child: Consumer<ChatDetailViewModel>(
-        builder: (context, viewModel, child) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(
-                product.title,
-                style: const TextStyle(
-                  fontFamily: 'CustomFont', // Menggunakan font kustom
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              backgroundColor: Colors.deepOrange,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          chat.name,
+          style: const TextStyle(
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+            fontSize: 20,
+          ),
+        ),
+        backgroundColor: Colors.orange,
+        centerTitle: true,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
+      backgroundColor: Colors.grey[50],
+      body: Column(
+        children: [
+          // Header produk/jasa terkait chat
+          Container(
+            margin: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.orange.withOpacity(0.08),
+              borderRadius: BorderRadius.circular(12),
             ),
-            body: Column(
+            child: Row(
               children: [
-                Expanded(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: viewModel.messages.length,
-                    itemBuilder: (context, index) {
-                      final message = viewModel.messages[index];
-                      final isMe = message.isMe;
-                      return Align(
-                        alignment:
-                            isMe ? Alignment.centerRight : Alignment.centerLeft,
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(
-                            vertical: 4,
-                            horizontal: 8,
-                          ),
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: isMe ? Colors.deepOrange : Colors.grey[300],
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Column(
-                            crossAxisAlignment:
-                                isMe
-                                    ? CrossAxisAlignment.end
-                                    : CrossAxisAlignment.start,
-                            children: [
-                              if (message.product != null)
-                                Image.network(
-                                  message.product!.image,
-                                  width: 100,
-                                  height: 100,
-                                  fit: BoxFit.cover,
-                                  errorBuilder:
-                                      (context, error, stackTrace) =>
-                                          const Icon(Icons.broken_image),
-                                ),
-                              if (message.text.isNotEmpty)
-                                Text(
-                                  message.text,
-                                  style: TextStyle(
-                                    fontFamily:
-                                        'CustomFont', // Menggunakan font kustom
-                                    color: isMe ? Colors.white : Colors.black,
-                                  ),
-                                ),
-                              Text(
-                                message.time,
-                                style: TextStyle(
-                                  fontFamily:
-                                      'CustomFont', // Menggunakan font kustom
-                                  fontSize: 12,
-                                  color: isMe ? Colors.white70 : Colors.grey,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.network(
+                    chat.product.image,
+                    width: 60,
+                    height: 60,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) =>
+                        const Icon(Icons.broken_image),
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  color: Colors.white,
-                  child: Row(
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: TextField(
-                          controller: viewModel.messageController,
-                          decoration: InputDecoration(
-                            hintText: 'Ketik pesan...',
-                            hintStyle: const TextStyle(
-                              fontFamily:
-                                  'CustomFont', // Menggunakan font kustom
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                          ),
+                      Text(
+                        chat.product.title,
+                        style: const TextStyle(
+                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: Colors.black87,
                         ),
                       ),
-                      const SizedBox(width: 8),
-                      CircleAvatar(
-                        backgroundColor: Colors.deepOrange,
-                        child: IconButton(
-                          icon: const Icon(Icons.send, color: Colors.white),
-                          onPressed: viewModel.sendMessage,
+                      Text(
+                        chat.product.price,
+                        style: const TextStyle(
+                          fontFamily: 'Poppins',
+                          color: Colors.deepOrange,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
                         ),
                       ),
                     ],
@@ -122,8 +76,93 @@ class ChatPageDetail extends StatelessWidget {
                 ),
               ],
             ),
-          );
-        },
+          ),
+          const Divider(),
+          // Chat content (dummy)
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
+                    margin: const EdgeInsets.only(bottom: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Text(
+                      "Halo, ada yang bisa dibantu?",
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 14,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
+                    margin: const EdgeInsets.only(bottom: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.orange,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Text(
+                      "Saya tertarik dengan produk/jasa ini.",
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 14,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                // Tambahkan chat bubble lain sesuai kebutuhan
+              ],
+            ),
+          ),
+          // Input chat
+          Container(
+            color: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Ketik pesan...',
+                      hintStyle: const TextStyle(fontFamily: 'Poppins'),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Colors.orange),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                      filled: true,
+                      fillColor: Colors.grey[100],
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.orange,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: IconButton(
+                    icon: const Icon(Icons.send, color: Colors.white),
+                    onPressed: () {
+                      // Implementasi kirim pesan
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

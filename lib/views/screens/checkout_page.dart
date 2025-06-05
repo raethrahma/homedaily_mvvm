@@ -17,7 +17,7 @@ class CheckoutPage extends StatelessWidget {
               title: const Text(
                 'Checkout',
                 style: TextStyle(
-                  fontFamily: 'CustomFont', // Menggunakan font kustom
+                  fontFamily: 'Poppins',
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
@@ -33,21 +33,60 @@ class CheckoutPage extends StatelessWidget {
                     child: const Text(
                       'Order Summary',
                       style: TextStyle(
-                        fontFamily: 'CustomFont', // Menggunakan font kustom
+                        fontFamily: 'Poppins',
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
                       ),
                     ),
                   ),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: viewModel.orderItems.length,
-                    itemBuilder: (context, index) {
-                      final item = viewModel.orderItems[index];
-                      return OrderItemCard(cartItem: item);
-                    },
-                  ),
+                  // Tampilkan Produk
+                  if (viewModel.produkItems.isNotEmpty) ...[
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        'Produk',
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: viewModel.produkItems.length,
+                      itemBuilder: (context, index) {
+                        final item = viewModel.produkItems[index];
+                        // Pastikan item.product.type dan item.product.category hanya 'Produk'
+                        return OrderItemCard(cartItem: item);
+                      },
+                    ),
+                  ],
+                  // Tampilkan Jasa
+                  if (viewModel.jasaItems.isNotEmpty) ...[
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      child: Text(
+                        'Jasa',
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: viewModel.jasaItems.length,
+                      itemBuilder: (context, index) {
+                        final item = viewModel.jasaItems[index];
+                        // Pastikan item.product.type dan item.product.category hanya 'Jasa'
+                        return OrderItemCard(cartItem: item);
+                      },
+                    ),
+                  ],
                   const Divider(),
                   Padding(
                     padding: const EdgeInsets.all(16),
@@ -57,7 +96,7 @@ class CheckoutPage extends StatelessWidget {
                         const Text(
                           'Shipping Address',
                           style: TextStyle(
-                            fontFamily: 'CustomFont', // Menggunakan font kustom
+                            fontFamily: 'Poppins',
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
                           ),
@@ -69,25 +108,22 @@ class CheckoutPage extends StatelessWidget {
                           hint: const Text(
                             'Select Address',
                             style: TextStyle(
-                              fontFamily:
-                                  'CustomFont', // Menggunakan font kustom
+                              fontFamily: 'Poppins',
                             ),
                           ),
-                          items:
-                              viewModel.availableAddresses
-                                  .map(
-                                    (address) => DropdownMenuItem(
-                                      value: address,
-                                      child: Text(
-                                        address,
-                                        style: const TextStyle(
-                                          fontFamily:
-                                              'CustomFont', // Menggunakan font kustom
-                                        ),
-                                      ),
+                          items: viewModel.availableAddresses
+                              .map(
+                                (address) => DropdownMenuItem(
+                                  value: address,
+                                  child: Text(
+                                    address,
+                                    style: const TextStyle(
+                                      fontFamily: 'Poppins',
                                     ),
-                                  )
-                                  .toList(),
+                                  ),
+                                ),
+                              )
+                              .toList(),
                           onChanged: (value) {
                             if (value != null) {
                               viewModel.selectAddress(value);
@@ -101,8 +137,7 @@ class CheckoutPage extends StatelessWidget {
                           child: const Text(
                             'Add New Address',
                             style: TextStyle(
-                              fontFamily:
-                                  'CustomFont', // Menggunakan font kustom
+                              fontFamily: 'Poppins',
                               color: Colors.blue,
                             ),
                           ),
@@ -119,7 +154,7 @@ class CheckoutPage extends StatelessWidget {
                         const Text(
                           'Payment Method',
                           style: TextStyle(
-                            fontFamily: 'CustomFont', // Menggunakan font kustom
+                            fontFamily: 'Poppins',
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
                           ),
@@ -131,25 +166,22 @@ class CheckoutPage extends StatelessWidget {
                           hint: const Text(
                             'Select Payment Method',
                             style: TextStyle(
-                              fontFamily:
-                                  'CustomFont', // Menggunakan font kustom
+                              fontFamily: 'Poppins',
                             ),
                           ),
-                          items:
-                              viewModel.paymentMethods
-                                  .map(
-                                    (method) => DropdownMenuItem(
-                                      value: method['name'] as String,
-                                      child: Text(
-                                        method['name'] as String,
-                                        style: const TextStyle(
-                                          fontFamily:
-                                              'CustomFont', // Menggunakan font kustom
-                                        ),
-                                      ),
+                          items: viewModel.paymentMethods
+                              .map(
+                                (method) => DropdownMenuItem(
+                                  value: method['name'] as String,
+                                  child: Text(
+                                    method['name'] as String,
+                                    style: const TextStyle(
+                                      fontFamily: 'Poppins',
                                     ),
-                                  )
-                                  .toList(),
+                                  ),
+                                ),
+                              )
+                              .toList(),
                           onChanged: (value) {
                             if (value != null) {
                               viewModel.selectPaymentMethod(value);
@@ -170,8 +202,7 @@ class CheckoutPage extends StatelessWidget {
                             const Text(
                               'Total',
                               style: TextStyle(
-                                fontFamily:
-                                    'CustomFont', // Menggunakan font kustom
+                                fontFamily: 'Poppins',
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18,
                               ),
@@ -179,8 +210,7 @@ class CheckoutPage extends StatelessWidget {
                             Text(
                               viewModel.getTotal(),
                               style: const TextStyle(
-                                fontFamily:
-                                    'CustomFont', // Menggunakan font kustom
+                                fontFamily: 'Poppins',
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18,
                                 color: Colors.deepOrange,
@@ -203,8 +233,7 @@ class CheckoutPage extends StatelessWidget {
                             child: const Text(
                               'Place Order',
                               style: TextStyle(
-                                fontFamily:
-                                    'CustomFont', // Menggunakan font kustom
+                                fontFamily: 'Poppins',
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                               ),

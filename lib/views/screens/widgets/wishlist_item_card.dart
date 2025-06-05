@@ -39,7 +39,7 @@ class WishlistItemCard extends StatelessWidget {
                   Text(
                     product.title,
                     style: const TextStyle(
-                      fontFamily: 'CustomFont', // Menggunakan font kustom
+                      fontFamily: 'Poppins',
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -47,7 +47,7 @@ class WishlistItemCard extends StatelessWidget {
                   Text(
                     product.price,
                     style: const TextStyle(
-                      fontFamily: 'CustomFont', // Menggunakan font kustom
+                      fontFamily: 'Poppins',
                       color: Colors.orange,
                       fontWeight: FontWeight.bold,
                     ),

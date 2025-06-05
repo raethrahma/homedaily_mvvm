@@ -17,7 +17,7 @@ class AddressManagementPage extends StatelessWidget {
               title: const Text(
                 'Atur Alamat',
                 style: TextStyle(
-                  fontFamily: 'CustomFont', // Menggunakan font kustom
+                  fontFamily: 'Poppins',
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
@@ -41,29 +41,25 @@ class AddressManagementPage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     address.name,
                                     style: const TextStyle(
-                                      fontFamily:
-                                          'CustomFont', // Menggunakan font kustom
+                                      fontFamily: 'Poppins',
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
                                     ),
                                   ),
                                   GestureDetector(
-                                    onTap:
-                                        () => viewModel.showEditDialog(
-                                          context,
-                                          index,
-                                        ),
+                                    onTap: () => viewModel.showEditDialog(
+                                      context,
+                                      index,
+                                    ),
                                     child: const Text(
                                       'Edit',
                                       style: TextStyle(
-                                        fontFamily:
-                                            'CustomFont', // Menggunakan font kustom
+                                        fontFamily: 'Poppins',
                                         color: Colors.blue,
                                       ),
                                     ),
@@ -74,8 +70,7 @@ class AddressManagementPage extends StatelessWidget {
                               Text(
                                 address.phone,
                                 style: const TextStyle(
-                                  fontFamily:
-                                      'CustomFont', // Menggunakan font kustom
+                                  fontFamily: 'Poppins',
                                   color: Colors.grey,
                                 ),
                               ),
@@ -83,34 +78,54 @@ class AddressManagementPage extends StatelessWidget {
                               Text(
                                 address.address,
                                 style: const TextStyle(
-                                  fontFamily:
-                                      'CustomFont', // Menggunakan font kustom
+                                  fontFamily: 'Poppins',
                                 ),
                               ),
                               const SizedBox(height: 8),
                               Row(
                                 children: [
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 4,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.deepOrange.withOpacity(0.1),
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    child: Text(
-                                      address.label,
-                                      style: const TextStyle(
-                                        fontFamily:
-                                            'CustomFont', // Menggunakan font kustom
-                                        color: Colors.deepOrange,
-                                        fontWeight: FontWeight.bold,
+                                  if (address.label.isNotEmpty)
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 8,
+                                        vertical: 4,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.deepOrange.withOpacity(0.1),
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                      child: Text(
+                                        address.label,
+                                        style: const TextStyle(
+                                          fontFamily: 'Poppins',
+                                          color: Colors.deepOrange,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  if (address.status == 'Utama')
+                                  if (address.type.isNotEmpty) ...[
+                                    const SizedBox(width: 8),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 8,
+                                        vertical: 4,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.blue.withOpacity(0.1),
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                      child: Text(
+                                        address.type,
+                                        style: const TextStyle(
+                                          fontFamily: 'Poppins',
+                                          color: Colors.blue,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                  if (address.status == 'Utama') ...[
+                                    const SizedBox(width: 8),
                                     Container(
                                       padding: const EdgeInsets.symmetric(
                                         horizontal: 8,
@@ -123,13 +138,13 @@ class AddressManagementPage extends StatelessWidget {
                                       child: Text(
                                         address.status,
                                         style: const TextStyle(
-                                          fontFamily:
-                                              'CustomFont', // Menggunakan font kustom
+                                          fontFamily: 'Poppins',
                                           color: Colors.green,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     ),
+                                  ],
                                 ],
                               ),
                             ],
@@ -155,7 +170,7 @@ class AddressManagementPage extends StatelessWidget {
                       child: const Text(
                         'Tambah Alamat Baru',
                         style: TextStyle(
-                          fontFamily: 'CustomFont', // Menggunakan font kustom
+                          fontFamily: 'Poppins',
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),

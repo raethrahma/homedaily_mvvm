@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:homedaily_mvvm/models/product.dart';
 import 'package:homedaily_mvvm/viewmodels/home_viewmodel.dart';
 import 'package:homedaily_mvvm/views/screens/widgets/product_card.dart';
 import 'package:provider/provider.dart';
 import 'package:homedaily_mvvm/views/screens/widgets/custom_bottom_navbar.dart';
+import 'package:homedaily_mvvm/views/screens/widgets/custom_card.dart';
 
+// Import halaman tujuan navigasi
+import 'package:homedaily_mvvm/views/screens/chat_list_page.dart';
+import 'package:homedaily_mvvm/views/screens/view_all_produk_page.dart';
+import 'package:homedaily_mvvm/views/screens/detail_product_page.dart';
+import 'package:homedaily_mvvm/models/product.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -20,13 +25,14 @@ class HomePage extends StatelessWidget {
               title: const Text(
                 'HomeDaily',
                 style: TextStyle(
-                  fontFamily: 'CustomFont', // Menggunakan font kustom
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
+                  fontSize: 20,
+                  fontFamily: 'Poppins',
                 ),
               ),
               centerTitle: true,
-              backgroundColor: Colors.deepOrange,
+              backgroundColor: Colors.orange,
               actions: [
                 IconButton(
                   icon: const Icon(
@@ -34,7 +40,10 @@ class HomePage extends StatelessWidget {
                     color: Colors.white,
                   ),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/chat_list');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const ChatListPage()),
+                    );
                   },
                 ),
                 const SizedBox(width: 8),
@@ -49,7 +58,7 @@ class HomePage extends StatelessWidget {
                     'ABSOLUTE FURNITURE',
                     '80% OFF',
                     'Apalagi yang kamu tunggu \n untuk ruang tengahmu',
-                    'SHOP NOW', // Menambahkan nilai untuk buttonText
+                    'SHOP NOW',
                   ),
                   _buildPopularSection(
                     context,
@@ -67,10 +76,10 @@ class HomePage extends StatelessWidget {
                     'ABSOLUTE HOMESERVICE',
                     '80% OFF',
                     'Apalagi yang kamu tunggu \n untuk perawatan rumah tersayang',
-                    'ORDER NOW', // Menambahkan nilai untuk buttonText
+                    'ORDER NOW',
                     imageUrl:
                         'https://images.unsplash.com/photo-1513694203232-719a1ce7a95f',
-                    overlayColor: Colors.blue.withOpacity(0.4),
+                    overlayColor: Colors.orange.withOpacity(0.4),
                   ),
                   _buildPopularSection(
                     context,
@@ -80,7 +89,8 @@ class HomePage extends StatelessWidget {
                 ],
               ),
             ),
-            bottomNavigationBar: CustomBottomNavBar(currentIndex: 0),          );
+            bottomNavigationBar: CustomBottomNavBar(currentIndex: 0),
+          );
         },
       ),
     );
@@ -92,7 +102,7 @@ class HomePage extends StatelessWidget {
     String title,
     String discount,
     String subtitle,
-    String buttonText, { // Parameter buttonText ditambahkan
+    String buttonText, {
     String? imageUrl,
     Color? overlayColor,
   }) {
@@ -109,7 +119,7 @@ class HomePage extends StatelessWidget {
         ),
       ),
       child: Container(
-        color: overlayColor ?? Colors.deepOrange.withOpacity(0.4),
+        color: overlayColor ?? Colors.orange.withOpacity(0.4),
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -118,39 +128,39 @@ class HomePage extends StatelessWidget {
             Text(
               title,
               style: const TextStyle(
-                fontFamily: 'CustomFont', // Menggunakan font kustom
                 color: Colors.white,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
+                fontFamily: 'Poppins',
               ),
             ),
             const SizedBox(height: 8),
             Text(
               discount,
               style: const TextStyle(
-                fontFamily: 'CustomFont', // Menggunakan font kustom
                 color: Colors.white,
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
+                fontFamily: 'Poppins',
               ),
             ),
             const SizedBox(height: 8),
             Text(
               subtitle,
               style: const TextStyle(
-                fontFamily: 'CustomFont', // Menggunakan font kustom
                 color: Colors.white,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
+                fontFamily: 'Poppins',
               ),
             ),
             const SizedBox(height: 16),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
+                backgroundColor: Colors.orange,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
@@ -158,15 +168,18 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                Navigator.pushNamed(context, '/view_all_products');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const ViewAllProduk()),
+                );
               },
               child: Text(
-                buttonText, // Menggunakan parameter buttonText
+                buttonText,
                 style: const TextStyle(
-                  fontFamily: 'CustomFont', // Menggunakan font kustom
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: Colors.white,
                   fontSize: 14,
+                  fontFamily: 'Poppins',
                 ),
               ),
             ),
@@ -179,7 +192,7 @@ class HomePage extends StatelessWidget {
   // Product List Section Widget
   Widget _buildPopularSection(
     BuildContext context,
-    List<Product> items,
+    List items,
     String title, {
     bool reverse = false,
   }) {
@@ -194,20 +207,23 @@ class HomePage extends StatelessWidget {
               Text(
                 title,
                 style: const TextStyle(
-                  fontFamily: 'CustomFont', // Menggunakan font kustom
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
+                  fontFamily: 'Poppins',
                 ),
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/view_all_products');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const ViewAllProduk()),
+                  );
                 },
                 child: const Text(
                   'View all',
                   style: TextStyle(
-                    fontFamily: 'CustomFont', // Menggunakan font kustom
                     color: Colors.grey,
+                    fontFamily: 'Poppins',
                   ),
                 ),
               ),
@@ -218,16 +234,86 @@ class HomePage extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
-            children:
-                items
-                    .map(
-                      (product) => Container(
-                        width: 160,
-                        margin: const EdgeInsets.only(right: 16),
-                        child: ProductCard(product: product),
+            children: items
+                .map<Widget>(
+                  (product) => SizedBox(
+                    width: 160,
+                    height: 220,
+                    child: CustomCard(
+                      padding: EdgeInsets.zero,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: ProductCard(
+                              product: product,
+                              onTap: () {
+                                if (product is Product) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) =>
+                                          ProductDetailPage(product: product),
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
+                            child: Row(
+                              children: [
+                                if (product is Product)
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 2),
+                                    decoration: BoxDecoration(
+                                      color: product.type == 'Produk'
+                                          ? Colors.orange.withOpacity(0.15)
+                                          : Colors.blue.withOpacity(0.15),
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    child: Text(
+                                      product.type,
+                                      style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12,
+                                        color: product.type == 'Produk'
+                                            ? Colors.orange
+                                            : Colors.blue,
+                                      ),
+                                    ),
+                                  ),
+                                if (product is Product) const SizedBox(width: 6),
+                                if (product is Product)
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 2),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey.withOpacity(0.15),
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    child: Text(
+                                      product.category,
+                                      style: const TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontSize: 12,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                    )
-                    .toList(),
+                    ),
+                  ),
+                )
+                .toList(),
           ),
         ),
         const SizedBox(height: 20),

@@ -13,111 +13,84 @@ class CartPage extends StatelessWidget {
       create: (_) => CartViewModel(),
       child: Consumer<CartViewModel>(
         builder: (context, viewModel, child) {
+          final List<String> filters = ['Produk', 'Jasa'];
           return Scaffold(
             appBar: AppBar(
               title: const Text(
                 'Cart',
                 style: TextStyle(
-                  fontFamily: 'CustomFont', // Menggunakan font kustom
+                  fontFamily: 'Poppins',
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
               ),
               centerTitle: true,
-              backgroundColor: Colors.deepOrange,
+              backgroundColor: Colors.orange,
             ),
             body: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: DropdownButton<String>(
-                    isExpanded: true,
-                    value: viewModel.selectedFilter,
-                    items:
-                        viewModel.filters
-                            .map(
-                              (filter) => DropdownMenuItem(
-                                value: filter,
-                                child: Text(
-                                  filter,
-                                  style: const TextStyle(
-                                    fontFamily:
-                                        'CustomFont', // Menggunakan font kustom
-                                  ),
-                                ),
-                              ),
-                            )
-                            .toList(),
-                    onChanged: (value) {
-                      if (value != null) {
-                        viewModel.updateFilter(value);
-                      }
-                    },
-                  ),
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: viewModel.filteredItems.length,
-                    itemBuilder: (context, index) {
-                      final item = viewModel.filteredItems[index];
-                      return CartItemCard(cartItem: item);
-                    },
-                  ),
-                ),
                 Container(
                   padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border(top: BorderSide(color: Colors.grey[300]!)),
-                  ),
-                  child: Column(
+                  color: Colors.white,
+                  child: Row(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Total',
-                            style: TextStyle(
-                              fontFamily:
-                                  'CustomFont', // Menggunakan font kustom
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
+                      Expanded(
+                        child: Container(
+                          height: 48,
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          decoration: BoxDecoration(
+                            color: Colors.orange,
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.orange.withOpacity(0.2),
+                                blurRadius: 4,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
                           ),
-                          Text(
-                            viewModel.getTotal(),
-                            style: const TextStyle(
-                              fontFamily:
-                                  'CustomFont', // Menggunakan font kustom
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                              color: Colors.deepOrange,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.deepOrange,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/checkout');
-                          },
-                          child: const Text(
-                            'Checkout',
-                            style: TextStyle(
-                              fontFamily:
-                                  'CustomFont', // Menggunakan font kustom
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              value: viewModel.selectedFilter,
+                              isExpanded: true,
+                              icon: Container(
+                                padding: const EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  color: Colors.orange.shade600,
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: const Icon(
+                                  Icons.keyboard_arrow_down_rounded,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                              ),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                              ),
+                              dropdownColor: Colors.orange.shade400,
+                              borderRadius: BorderRadius.circular(12),
+                              items: filters.map((filter) {
+                                return DropdownMenuItem(
+                                  value: filter,
+                                  child: Text(
+                                    filter,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                if (value != null) {
+                                  viewModel.updateFilter(value);
+                                }
+                              },
                             ),
                           ),
                         ),
@@ -125,9 +98,37 @@ class CartPage extends StatelessWidget {
                     ],
                   ),
                 ),
+                Expanded(
+                  child: viewModel.filteredCartItems.isEmpty
+                      ? const Center(
+                          child: Text(
+                            'Keranjang kosong.',
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 16,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        )
+                      : ListView.builder(
+                          padding: const EdgeInsets.all(16),
+                          itemCount: viewModel.filteredCartItems.length,
+                          itemBuilder: (context, index) {
+                            final cartItem = viewModel.filteredCartItems[index];
+                            // Pastikan cartItem.product.type dan cartItem.product.category hanya 'Produk' atau 'Jasa'
+                            return CartItemCard(
+                              cartItem: cartItem,
+                              onRemove: () => viewModel.removeFromCart(cartItem),
+                              onQuantityChanged: (qty) => viewModel.updateQuantity(cartItem, qty),
+                              // Tampilkan badge type/category jika ingin:
+                              // badge: cartItem.product.type,
+                            );
+                          },
+                        ),
+                ),
               ],
             ),
-            bottomNavigationBar: CustomBottomNavBar(currentIndex: 3),
+            bottomNavigationBar: const CustomBottomNavBar(currentIndex: 3),
           );
         },
       ),
