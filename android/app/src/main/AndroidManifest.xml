@@ -10,11 +10,7 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
             
-        <!-- Add your Web Client ID -->
-        <meta-data
-            android:name="com.google.android.gms.auth.CLIENT_ID"
-            android:value="1060896126634-jmgsavo8dmt248ihc317m65hmg6khtpm.apps.googleusercontent.com"/>
-            
+        
         <!-- Add support for Google Sign In -->
         <activity
             android:name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity"
@@ -62,5 +58,6 @@
             <data android:mimeType="text/plain"/>
         </intent>
         <package android:name="com.google.android.gms" />
+        <package android:name="com.google.android.apps.signin" />
     </queries>
 </manifest>
