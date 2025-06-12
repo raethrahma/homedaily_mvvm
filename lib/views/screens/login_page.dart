@@ -1,135 +1,269 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:homedaily_mvvm/viewmodels/auth_viewmodel.dart';
+import 'package:homedaily_mvvm/views/screens/register_page.dart';
 import 'package:homedaily_mvvm/views/screens/home_page.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  bool _obscurePassword = true;
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          ClipPath(
-            clipper: CurvedBottomClipper(),
-            child: SizedBox(
-              width: double.infinity,
-              height: 300,
-              child: Stack(
+    return ChangeNotifierProvider(
+      create: (_) => AuthViewModel(),
+      child: Scaffold(
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Image.network(
-                    'https://images.unsplash.com/photo-1502672023488-70e25813eb80',
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                    errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
-                  ),
-                  Container(
-                    color: Colors.orange.withOpacity(0.8),
-                    width: double.infinity,
-                  ),
+                  // Header Section
+                  const SizedBox(height: 40),
                   Center(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Text(
-                        'Kebebasan untuk mengekspresikan rumah anda',
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.poppins(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                    child: Image.asset('assets/images/logo.png', height: 60),
+                  ),
+                  const SizedBox(height: 40),
+                  Text(
+                    'Welcome Back!',
+                    style: GoogleFonts.poppins(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey[800],
+                    ),
+                  ),
+                  Text(
+                    'Sign in to continue',
+                    style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+
+                  // Form Section
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        Consumer<AuthViewModel>(
+                          builder: (context, viewModel, child) {
+                            if (viewModel.error != null) {
+                              return Container(
+                                padding: const EdgeInsets.all(16),
+                                margin: const EdgeInsets.only(bottom: 24),
+                                decoration: BoxDecoration(
+                                  color: Colors.red[50],
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text(
+                                  viewModel.error!,
+                                  style: TextStyle(color: Colors.red[700]),
+                                ),
+                              );
+                            }
+                            return const SizedBox.shrink();
+                          },
                         ),
+                        TextFormField(
+                          controller: _emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: InputDecoration(
+                            labelText: 'Email',
+                            hintText: 'balamia@gmail.com',
+                            prefixIcon: Icon(
+                              Icons.email_outlined,
+                              color: Colors.orange[300],
+                            ),
+                            labelStyle: GoogleFonts.poppins(),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                color: Colors.orange[200]!,
+                              ),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your email';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        TextFormField(
+                          controller: _passwordController,
+                          obscureText: _obscurePassword,
+                          decoration: InputDecoration(
+                            labelText: 'Password',
+                            prefixIcon: Icon(
+                              Icons.lock_outline,
+                              color: Colors.orange[300],
+                            ),
+                            labelStyle: GoogleFonts.poppins(),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                color: Colors.orange[200]!,
+                              ),
+                            ),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _obscurePassword
+                                    ? Icons.visibility_outlined
+                                    : Icons.visibility_off_outlined,
+                                color: Colors.grey,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _obscurePassword = !_obscurePassword;
+                                });
+                              },
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your password';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 40),
+                        Consumer<AuthViewModel>(
+                          builder: (context, viewModel, child) {
+                            return ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.orange,
+                                minimumSize: const Size(double.infinity, 55),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              onPressed:
+                                  viewModel.isLoading
+                                      ? null
+                                      : () async {
+                                        if (_formKey.currentState!.validate()) {
+                                          final success = await viewModel.login(
+                                            _emailController.text,
+                                            _passwordController.text,
+                                          );
+                                          if (success && context.mounted) {
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder:
+                                                    (context) =>
+                                                        const HomePage(),
+                                              ),
+                                            );
+                                          }
+                                        }
+                                      },
+                              child:
+                                  viewModel.isLoading
+                                      ? const SizedBox(
+                                        height: 20,
+                                        width: 20,
+                                        child: CircularProgressIndicator(
+                                          color: Colors.white,
+                                          strokeWidth: 2,
+                                        ),
+                                      )
+                                      : Text(
+                                        'Login',
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Additional Options
+                  const SizedBox(height: 24),
+                  Center(
+                    child: Text(
+                      'Or continue with',
+                      style: GoogleFonts.poppins(color: Colors.grey[600]),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  OutlinedButton.icon(
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 55),
+                      side: BorderSide(color: Colors.orange[200]!),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
                     ),
+                    icon: Image.asset('assets/images/google.png', height: 24),
+                    label: Text(
+                      'Continue with Google',
+                      style: GoogleFonts.poppins(
+                        color: Colors.grey[700],
+                        fontSize: 16,
+                      ),
+                    ),
+                    onPressed: () {
+                      // Implement Google Sign In
+                    },
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Belum Punya Akun? ',
+                        style: GoogleFonts.poppins(color: Colors.grey[600]),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const RegisterPage(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          'Daftar Sekarang',
+                          style: GoogleFonts.poppins(
+                            color: Colors.orange,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                const SizedBox(height: 20),
-                TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Username',
-                    labelStyle: GoogleFonts.poppins(),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    prefixIcon: const Icon(Icons.person, color: Colors.orange),
-                    filled: true,
-                    fillColor: Colors.grey[50],
-                  ),
-                ),
-                const SizedBox(height: 15),
-                TextField(
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    labelStyle: GoogleFonts.poppins(),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    prefixIcon: const Icon(Icons.lock, color: Colors.orange),
-                    filled: true,
-                    fillColor: Colors.grey[50],
-                  ),
-                ),
-                const SizedBox(height: 25),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orange,
-                      padding: const EdgeInsets.symmetric(vertical: 15),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const HomePage(),
-                        ),
-                      );
-                    },
-                    child: Text(
-                      'LOGIN',
-                      style: GoogleFonts.poppins(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
-}
-
-class CurvedBottomClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    final path = Path();
-    path.lineTo(0, size.height - 50);
-    path.quadraticBezierTo(
-      size.width / 2,
-      size.height,
-      size.width,
-      size.height - 50,
-    );
-    path.lineTo(size.width, 0);
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }

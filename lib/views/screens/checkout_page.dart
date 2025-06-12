@@ -22,7 +22,7 @@ class CheckoutPage extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-              backgroundColor: Colors.deepOrange,
+              backgroundColor: Colors.orange,
             ),
             body: SingleChildScrollView(
               child: Column(
@@ -66,7 +66,10 @@ class CheckoutPage extends StatelessWidget {
                   // Tampilkan Jasa
                   if (viewModel.jasaItems.isNotEmpty) ...[
                     const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                       child: Text(
                         'Jasa',
                         style: TextStyle(
@@ -107,23 +110,22 @@ class CheckoutPage extends StatelessWidget {
                           value: viewModel.selectedAddress,
                           hint: const Text(
                             'Select Address',
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                            ),
+                            style: TextStyle(fontFamily: 'Poppins'),
                           ),
-                          items: viewModel.availableAddresses
-                              .map(
-                                (address) => DropdownMenuItem(
-                                  value: address,
-                                  child: Text(
-                                    address,
-                                    style: const TextStyle(
-                                      fontFamily: 'Poppins',
+                          items:
+                              viewModel.availableAddresses
+                                  .map(
+                                    (address) => DropdownMenuItem(
+                                      value: address,
+                                      child: Text(
+                                        address,
+                                        style: const TextStyle(
+                                          fontFamily: 'Poppins',
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              )
-                              .toList(),
+                                  )
+                                  .toList(),
                           onChanged: (value) {
                             if (value != null) {
                               viewModel.selectAddress(value);
@@ -165,23 +167,22 @@ class CheckoutPage extends StatelessWidget {
                           value: viewModel.selectedPaymentMethod,
                           hint: const Text(
                             'Select Payment Method',
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                            ),
+                            style: TextStyle(fontFamily: 'Poppins'),
                           ),
-                          items: viewModel.paymentMethods
-                              .map(
-                                (method) => DropdownMenuItem(
-                                  value: method['name'] as String,
-                                  child: Text(
-                                    method['name'] as String,
-                                    style: const TextStyle(
-                                      fontFamily: 'Poppins',
+                          items:
+                              viewModel.paymentMethods
+                                  .map(
+                                    (method) => DropdownMenuItem(
+                                      value: method['name'] as String,
+                                      child: Text(
+                                        method['name'] as String,
+                                        style: const TextStyle(
+                                          fontFamily: 'Poppins',
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              )
-                              .toList(),
+                                  )
+                                  .toList(),
                           onChanged: (value) {
                             if (value != null) {
                               viewModel.selectPaymentMethod(value);
@@ -213,7 +214,7 @@ class CheckoutPage extends StatelessWidget {
                                 fontFamily: 'Poppins',
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18,
-                                color: Colors.deepOrange,
+                                color: Colors.orange,
                               ),
                             ),
                           ],
@@ -223,7 +224,7 @@ class CheckoutPage extends StatelessWidget {
                           width: double.infinity,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.deepOrange,
+                              backgroundColor: Colors.orange,
                               padding: const EdgeInsets.symmetric(vertical: 16),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
