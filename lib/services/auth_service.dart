@@ -34,14 +34,26 @@ class AuthService {
           'name': user.name,
           'email': user.email,
           'password': password,
-          'phone': user.phone,
+          'password_confirmation': password,
         },
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return AuthModel.fromJson(response.data['data']);
+        if (response.data['status'] == true) {
+          final userData = response.data['user'];
+          final token = response.data['token'];
+
+          // Add token to subsequent requests
+          _dio.options.headers['Authorization'] = 'Bearer $token';
+
+          return AuthModel.fromJson(userData);
+        } else {
+          throw Exception(response.data['message'] ?? 'Registration failed');
+        }
       } else {
-        throw Exception(response.data['message'] ?? 'Registration failed');
+        throw Exception(
+          'Registration failed with status: ${response.statusCode}',
+        );
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 422) {

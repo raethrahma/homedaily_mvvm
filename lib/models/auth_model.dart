@@ -2,31 +2,27 @@ class AuthModel {
   final int? id;
   final String name;
   final String email;
-  final String? phone;
-  final String? token;
-  final String? role;
+  final String? createdAt;
+  final String? updatedAt;
+  final String? googleId;
 
   AuthModel({
     this.id,
     required this.name,
     required this.email,
-    this.phone,
-    this.token,
-    this.role,
+    this.createdAt,
+    this.updatedAt,
+    this.googleId,
   });
 
   factory AuthModel.fromJson(Map<String, dynamic> json) {
     return AuthModel(
-      id: json['id'],
-      name: json['name'] ?? '',
-      email: json['email'] ?? '',
-      phone: json['phone'],
-      token: json['token'],
-      role: json['role'],
+      id: json['user_id'],
+      name: json['name'],
+      email: json['email'],
+      createdAt: json['created_at'],
+      updatedAt: json['updated_at'],
+      googleId: json['google_id'],
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'name': name, 'email': email, 'phone': phone};
   }
 }

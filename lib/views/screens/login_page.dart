@@ -20,43 +20,49 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Hapus ChangeNotifierProvider di sini
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header Section
-                const SizedBox(height: 40),
-                Center(
-                  child: Image.asset(
-                    'assets/images/logo-white.png',
-                    height: 60,
-                  ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Gradient Header with Logo
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.fromLTRB(24.0, 32.0, 24.0, 32.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Image.asset(
+                      'assets/images/logo-black.png',
+                      height: 42,
+                      fit: BoxFit.contain,
+                    ),
+                    const SizedBox(height: 64),
+                    Text(
+                      'Welcome Back',
+                      style: GoogleFonts.poppins(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey[800],
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Start your journey with now!',
+                      style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 40),
-                Text(
-                  'Welcome Back!',
-                  style: GoogleFonts.poppins(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey[800],
-                  ),
-                ),
-                Text(
-                  'Sign in to continue',
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    color: Colors.grey[600],
-                  ),
-                ),
-                const SizedBox(height: 40),
+              ),
 
-                // Form Section
-                Form(
+              // Form Section
+              Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Form(
                   key: _formKey,
                   child: Column(
                     children: [
@@ -208,86 +214,87 @@ class _LoginPageState extends State<LoginPage> {
                           );
                         },
                       ),
+                      const SizedBox(height: 24),
+                      Center(
+                        child: Text(
+                          'Or continue with',
+                          style: GoogleFonts.poppins(color: Colors.grey[600]),
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      OutlinedButton.icon(
+                        style: OutlinedButton.styleFrom(
+                          minimumSize: const Size(double.infinity, 55),
+                          side: BorderSide(color: Colors.orange[200]!),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        icon: Image.asset(
+                          'assets/images/google.png',
+                          height: 24,
+                        ),
+                        label: Text(
+                          'Continue with Google',
+                          style: GoogleFonts.poppins(
+                            color: Colors.grey[700],
+                            fontSize: 16,
+                          ),
+                        ),
+                        onPressed: () async {
+                          final viewModel = context.read<AuthViewModel>();
+                          try {
+                            final success = await viewModel.signInWithGoogle();
+                            if (success && context.mounted) {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const HomePage(),
+                                ),
+                              );
+                            }
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(e.toString()),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 24),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Belum Punya Akun? ',
+                            style: GoogleFonts.poppins(color: Colors.grey[600]),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const RegisterPage(),
+                                ),
+                              );
+                            },
+                            child: Text(
+                              'Daftar Sekarang',
+                              style: GoogleFonts.poppins(
+                                color: Colors.orange,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
-
-                // Additional Options
-                const SizedBox(height: 24),
-                Center(
-                  child: Text(
-                    'Or continue with',
-                    style: GoogleFonts.poppins(color: Colors.grey[600]),
-                  ),
-                ),
-                const SizedBox(height: 24),
-                OutlinedButton.icon(
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 55),
-                    side: BorderSide(color: Colors.orange[200]!),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  icon: Image.asset('assets/images/google.png', height: 24),
-                  label: Text(
-                    'Continue with Google',
-                    style: GoogleFonts.poppins(
-                      color: Colors.grey[700],
-                      fontSize: 16,
-                    ),
-                  ),
-                  onPressed: () async {
-                    final viewModel = context.read<AuthViewModel>();
-                    try {
-                      final success = await viewModel.signInWithGoogle();
-                      if (success && context.mounted) {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const HomePage(),
-                          ),
-                        );
-                      }
-                    } catch (e) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(e.toString()),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                    }
-                  },
-                ),
-                const SizedBox(height: 24),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Belum Punya Akun? ',
-                      style: GoogleFonts.poppins(color: Colors.grey[600]),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const RegisterPage(),
-                          ),
-                        );
-                      },
-                      child: Text(
-                        'Daftar Sekarang',
-                        style: GoogleFonts.poppins(
-                          color: Colors.orange,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
