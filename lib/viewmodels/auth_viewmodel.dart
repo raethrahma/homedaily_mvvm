@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:homedaily_mvvm/models/auth_model.dart';
-import 'package:homedaily_mvvm/services/auth_service.dart';
+import '../models/auth_model.dart';
+import '../services/auth_service.dart';
+import '../services/google_auth_service.dart';
 
 class AuthViewModel extends ChangeNotifier {
   final AuthService _authService = AuthService();
+  final GoogleAuthService _googleAuthService = GoogleAuthService();
   bool _isLoading = false;
   String? _error;
   AuthModel? _currentUser;
@@ -23,21 +25,16 @@ class AuthViewModel extends ChangeNotifier {
       _error = null;
       notifyListeners();
 
-      final user = AuthModel(
-        name: name,
-        email: email,
-        password: password,
-        phone: phone,
-      );
+      final user = AuthModel(name: name, email: email, phone: phone);
 
-      await _authService.register(user);
+      await _authService.register(user, password);
 
       _isLoading = false;
       notifyListeners();
       return true;
     } catch (e) {
       _isLoading = false;
-      _error = e.toString();
+      _error = e.toString().replaceAll('Exception: ', '');
       notifyListeners();
       return false;
     }
@@ -53,11 +50,36 @@ class AuthViewModel extends ChangeNotifier {
       _currentUser = response;
 
       _isLoading = false;
+      _error = null;
+      notifyListeners();
+
+      return true;
+    } catch (e) {
+      _isLoading = false;
+      _error = e.toString().replaceAll('Exception: ', '');
+      notifyListeners();
+
+      // Print error for debugging
+      print('Login Error: $_error');
+      return false;
+    }
+  }
+
+  Future<bool> signInWithGoogle() async {
+    try {
+      _isLoading = true;
+      _error = null;
+      notifyListeners();
+
+      _currentUser = await _googleAuthService.signInWithGoogle();
+
+      _isLoading = false;
       notifyListeners();
       return true;
     } catch (e) {
       _isLoading = false;
-      _error = e.toString();
+      _error = e.toString().replaceAll('Exception: ', '');
+      print('Google Sign In Error in ViewModel: $_error');
       notifyListeners();
       return false;
     }

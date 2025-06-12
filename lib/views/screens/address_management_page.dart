@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:homedaily_mvvm/models/address.dart';
 import 'package:homedaily_mvvm/viewmodels/address_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -41,7 +40,8 @@ class AddressManagementPage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     address.name,
@@ -52,10 +52,11 @@ class AddressManagementPage extends StatelessWidget {
                                     ),
                                   ),
                                   GestureDetector(
-                                    onTap: () => viewModel.showEditDialog(
-                                      context,
-                                      index,
-                                    ),
+                                    onTap:
+                                        () => viewModel.showEditDialog(
+                                          context,
+                                          index,
+                                        ),
                                     child: const Text(
                                       'Edit',
                                       style: TextStyle(
@@ -77,9 +78,7 @@ class AddressManagementPage extends StatelessWidget {
                               const SizedBox(height: 8),
                               Text(
                                 address.address,
-                                style: const TextStyle(
-                                  fontFamily: 'Poppins',
-                                ),
+                                style: const TextStyle(fontFamily: 'Poppins'),
                               ),
                               const SizedBox(height: 8),
                               Row(
@@ -91,7 +90,9 @@ class AddressManagementPage extends StatelessWidget {
                                         vertical: 4,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: Colors.deepOrange.withOpacity(0.1),
+                                        color: Colors.deepOrange.withOpacity(
+                                          0.1,
+                                        ),
                                         borderRadius: BorderRadius.circular(4),
                                       ),
                                       child: Text(

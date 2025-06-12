@@ -5,7 +5,7 @@
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         
-        <!-- Add your reversed client ID -->
+        <!-- Add this meta-data -->
         <meta-data 
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -47,17 +47,9 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
-    <!-- Required to query activities that can process text, see:
-         https://developer.android.com/training/package-visibility and
-         https://developer.android.com/reference/android/content/Intent#ACTION_PROCESS_TEXT.
 
-         In particular, this is used by the Flutter engine in io.flutter.plugin.text.ProcessTextPlugin. -->
+    <!-- Add these queries -->
     <queries>
-        <intent>
-            <action android:name="android.intent.action.PROCESS_TEXT"/>
-            <data android:mimeType="text/plain"/>
-        </intent>
         <package android:name="com.google.android.gms" />
-        <package android:name="com.google.android.apps.signin" />
     </queries>
 </manifest>

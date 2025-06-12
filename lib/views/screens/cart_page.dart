@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:homedaily_mvvm/viewmodels/cart_viewmodel.dart';
-import 'package:homedaily_mvvm/views/screens/checkout_page.dart';
 import 'package:homedaily_mvvm/views/screens/widgets/cart_item_card.dart';
 import 'package:provider/provider.dart';
 import 'package:homedaily_mvvm/views/screens/widgets/custom_bottom_navbar.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class CartPage extends StatelessWidget {
   const CartPage({super.key});

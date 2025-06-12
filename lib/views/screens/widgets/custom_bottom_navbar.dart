@@ -4,9 +4,9 @@ class CustomBottomNavBar extends StatelessWidget {
   final int currentIndex;
 
   const CustomBottomNavBar({
-    Key? key,
+    super.key,
     required this.currentIndex,
-  }) : super(key: key);
+  });
 
   void _onItemTapped(BuildContext context, int index) {
     if (index == currentIndex) return; // Tidak perlu navigasi jika sudah di halaman yang sama
