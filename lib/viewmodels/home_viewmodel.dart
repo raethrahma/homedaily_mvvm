@@ -11,9 +11,9 @@ class HomeViewModel extends ChangeNotifier {
 
   // Getter untuk memisahkan data berdasarkan kategori
   List<Product> get products =>
-      _allProducts.where((product) => product.type == 'Produk').toList();
+      _allProducts.where((product) => product.type != 'jasa').toList();
   List<Product> get services =>
-      _allProducts.where((product) => product.type == 'Jasa').toList();
+      _allProducts.where((product) => product.type == 'jasa').toList();
   bool get isLoading => _isLoading;
   String get errorMessage => _errorMessage;
 

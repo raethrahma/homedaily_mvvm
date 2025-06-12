@@ -5,7 +5,6 @@ class Product {
   final String price;
   final int stock;
   final String categoryName;
-  final String type; // Type diambil dari categoryName
   final List<String> images;
 
   Product({
@@ -16,7 +15,11 @@ class Product {
     required this.stock,
     required this.categoryName,
     required this.images,
-  }) : type = categoryName;
+  });
+
+  // Getter untuk memudahkan filter jasa/produk
+  bool get isService => categoryName.toLowerCase() == 'jasa';
+  String get type => isService ? 'jasa' : 'produk';
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
