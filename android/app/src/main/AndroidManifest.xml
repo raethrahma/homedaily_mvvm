@@ -46,6 +46,11 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+        <!-- Tambahkan Web Client ID -->
+        <meta-data
+            android:name="com.google.android.gms.auth.CLIENT_ID"
+            android:value="1060896126634-jmgsavo8dmt248ihc317m65hmg6khtpm.apps.googleusercontent.com"/>
     </application>
 
     <!-- Add these queries -->

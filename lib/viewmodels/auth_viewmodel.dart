@@ -18,16 +18,15 @@ class AuthViewModel extends ChangeNotifier {
     required String name,
     required String email,
     required String password,
-    String? phone,
   }) async {
     try {
       _isLoading = true;
       _error = null;
       notifyListeners();
 
-      final user = AuthModel(name: name, email: email, phone: phone);
+      final user = AuthModel(name: name, email: email);
 
-      await _authService.register(user, password);
+      _currentUser = await _authService.register(user, password);
 
       _isLoading = false;
       notifyListeners();
