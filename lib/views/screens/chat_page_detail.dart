@@ -40,7 +40,7 @@ class ChatDetailPage extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: Image.network(
-                    chat.product.image,
+                    chat.product.images.isNotEmpty ? chat.product.images.first : '',
                     width: 60,
                     height: 60,
                     fit: BoxFit.cover,
@@ -54,7 +54,7 @@ class ChatDetailPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        chat.product.title,
+                        chat.product.name, // Properti `name` dari model `Product`
                         style: const TextStyle(
                           fontFamily: 'Poppins',
                           fontWeight: FontWeight.bold,
@@ -63,7 +63,7 @@ class ChatDetailPage extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        chat.product.price,
+                        'Rp ${chat.product.price}', // Properti `price` dari model `Product` dengan prefix "Rp"
                         style: const TextStyle(
                           fontFamily: 'Poppins',
                           color: Colors.deepOrange,

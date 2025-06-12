@@ -13,7 +13,7 @@ class ChatDetailViewModel extends ChangeNotifier {
     _messages.add(
       ChatMessage(
         id: '1',
-        text: 'Produk: ${product.title}\nHarga: Rp ${product.price}',
+        text: 'Produk: ${product.name}\nHarga: Rp ${product.price}',
         time: DateFormat('HH:mm').format(DateTime.now()),
         isMe: false,
         product: product,
@@ -32,7 +32,7 @@ class ChatDetailViewModel extends ChangeNotifier {
     _messages.add(
       ChatMessage(
         id: '3',
-        text: 'Iya, produk ${product.title} masih tersedia.',
+        text: 'Iya, produk ${product.name} masih tersedia.',
         time: DateFormat('HH:mm').format(DateTime.now()),
         isMe: false,
       ),

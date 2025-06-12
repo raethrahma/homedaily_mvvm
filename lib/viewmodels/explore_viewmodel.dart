@@ -4,31 +4,31 @@ import 'package:homedaily_mvvm/models/product.dart';
 class ExploreViewModel extends ChangeNotifier {
   final List<Product> _products = [
     Product(
-      id: '1',
-      image: 'https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc',
-      title: 'Meja Minimalis',
+      id: 1,
+      name: 'Meja Minimalis',
       description: 'Meja kayu berkualitas tinggi',
       price: '247.50',
-      type: 'Produk',
-      category: 'Produk', // Sesuaikan kategori hanya 'Produk' atau 'Jasa'
+      stock: 5,
+      categoryName: 'Produk',
+      images: ['https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc'],
     ),
     Product(
-      id: '2',
-      image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7',
-      title: 'Lampu Kuning Cantik',
+      id: 2,
+      name: 'Lampu Kuning Cantik',
       description: 'Lampu dekorasi estetik',
       price: '247.50',
-      type: 'Produk',
-      category: 'Produk',
+      stock: 10,
+      categoryName: 'Produk',
+      images: ['https://images.unsplash.com/photo-1586023492125-27b2c045efd7'],
     ),
     Product(
-      id: '3',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d',
-      title: 'Cleaning Service',
+      id: 3,
+      name: 'Cleaning Service',
       description: 'Jasa cleaning service profesional',
       price: '500.00',
-      type: 'Jasa',
-      category: 'Jasa',
+      stock: 0,
+      categoryName: 'Jasa',
+      images: ['https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d'],
     ),
   ];
 
@@ -60,15 +60,17 @@ class ExploreViewModel extends ChangeNotifier {
       if (_selectedFilter == 'All') {
         _filteredProducts = _products;
       } else {
-        _filteredProducts =
-            _products.where((product) => product.category == _selectedFilter).toList();
+        _filteredProducts = _products
+            .where((product) => product.categoryName == _selectedFilter)
+            .toList();
       }
     } else {
-      _filteredProducts =
-          _products.where((product) =>
-              product.title.toLowerCase().contains(query.toLowerCase()) ||
-              product.description.toLowerCase().contains(query.toLowerCase())
-          ).toList();
+      _filteredProducts = _products
+          .where((product) =>
+              product.name.toLowerCase().contains(query.toLowerCase()) ||
+              (product.description?.toLowerCase().contains(query.toLowerCase()) ??
+                  false))
+          .toList();
     }
     notifyListeners();
   }

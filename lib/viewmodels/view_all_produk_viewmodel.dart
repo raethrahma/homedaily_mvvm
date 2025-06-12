@@ -1,50 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:homedaily_mvvm/models/product.dart';
+import 'package:homedaily_mvvm/services/api_service.dart';
 
 class ViewAllProdukViewModel extends ChangeNotifier {
-  final List<Product> _products = [
-    Product(
-      id: '1',
-      image: 'https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc',
-      title: 'Meja Minimalis',
-      description: 'Meja kayu berkualitas tinggi',
-      price: 'Rp.247.50',
-      type: 'Produk',
-      category: 'Produk',
-    ),
-    Product(
-      id: '2',
-      image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7',
-      title: 'Lampu Kuning Cantik',
-      description: 'Lampu dekorasi estetik',
-      price: 'Rp.247.50',
-      type: 'Produk',
-      category: 'Produk',
-    ),
-    Product(
-      id: '3',
-      image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc',
-      title: 'Sofa Nyaman',
-      description: 'Sofa empuk untuk ruang keluarga',
-      price: 'Rp.2.757.000',
-      type: 'Produk',
-      category: 'Produk',
-    ),
-  ];
+  final ApiService _apiService = ApiService();
 
+  List<Product> _products = []; // Produk dari API
+  bool _isLoading = false;
+  String _errorMessage = '';
+
+  // Getter
   List<Product> get products => _products;
+  bool get isLoading => _isLoading;
+  String get errorMessage => _errorMessage;
 
+  // Fungsi untuk mengambil data dari API
+  Future<void> fetchProducts() async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      _products = await _apiService.fetchProducts();
+      _errorMessage = '';
+    } catch (e) {
+      _errorMessage = 'Failed to fetch products: $e';
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  // Fungsi untuk menambah produk
   void addProduct(Product product) {
     _products.add(product);
     notifyListeners();
   }
 
-  void removeProduct(String id) {
+  // Fungsi untuk menghapus produk berdasarkan ID
+  void removeProduct(int id) {
     _products.removeWhere((product) => product.id == id);
     notifyListeners();
   }
 
-  void updateProduct(String id, Product updatedProduct) {
+  // Fungsi untuk memperbarui produk berdasarkan ID
+  void updateProduct(int id, Product updatedProduct) {
     final index = _products.indexWhere((product) => product.id == id);
     if (index != -1) {
       _products[index] = updatedProduct;

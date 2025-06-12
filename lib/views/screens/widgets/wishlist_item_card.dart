@@ -22,13 +22,12 @@ class WishlistItemCard extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Image.network(
-                product.image,
+                product.images.isNotEmpty ? product.images.first : '', // Mengambil gambar pertama dari daftar gambar
                 width: 80,
                 height: 80,
                 fit: BoxFit.cover,
-                errorBuilder:
-                    (context, error, stackTrace) =>
-                        const Icon(Icons.broken_image),
+                errorBuilder: (context, error, stackTrace) =>
+                    const Icon(Icons.broken_image),
               ),
             ),
             const SizedBox(width: 16),
@@ -37,7 +36,7 @@ class WishlistItemCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    product.title,
+                    product.name, // Menggunakan properti `name` dari model `Product`
                     style: const TextStyle(
                       fontFamily: 'Poppins',
                       fontWeight: FontWeight.bold,
@@ -45,7 +44,7 @@ class WishlistItemCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    product.price,
+                    'Rp ${product.price}', // Menambahkan prefix "Rp" pada harga
                     style: const TextStyle(
                       fontFamily: 'Poppins',
                       color: Colors.orange,

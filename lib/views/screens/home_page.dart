@@ -20,6 +20,14 @@ class HomePage extends StatelessWidget {
       create: (_) => HomeViewModel(),
       child: Consumer<HomeViewModel>(
         builder: (context, viewModel, child) {
+          // Tambahkan ini agar fetchProducts hanya dipanggil sekali
+          Future.microtask(() {
+            if (!viewModel.isLoading &&
+                viewModel.products.isEmpty &&
+                viewModel.errorMessage.isEmpty) {
+              viewModel.fetchProducts();
+            }
+          });
           return Scaffold(
             appBar: AppBar(
               title: const Text(
@@ -112,8 +120,7 @@ class HomePage extends StatelessWidget {
       decoration: BoxDecoration(
         image: DecorationImage(
           image: NetworkImage(
-            imageUrl ??
-                'https://images.unsplash.com/photo-1540221652346-3ec6807e5e7e',
+            imageUrl ?? 'https://images.unsplash.com/photo-1540221652346-3ec6807e5e7e',
           ),
           fit: BoxFit.cover,
         ),
@@ -192,7 +199,7 @@ class HomePage extends StatelessWidget {
   // Product List Section Widget
   Widget _buildPopularSection(
     BuildContext context,
-    List items,
+    List<Product> items,
     String title, {
     bool reverse = false,
   }) {
@@ -234,86 +241,80 @@ class HomePage extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
-            children: items
-                .map<Widget>(
-                  (product) => SizedBox(
-                    width: 160,
-                    height: 220,
-                    child: CustomCard(
-                      padding: EdgeInsets.zero,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: ProductCard(
-                              product: product,
-                              onTap: () {
-                                if (product is Product) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) =>
-                                          ProductDetailPage(product: product),
-                                    ),
-                                  );
-                                }
-                              },
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 4),
-                            child: Row(
-                              children: [
-                                if (product is Product)
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 2),
-                                    decoration: BoxDecoration(
-                                      color: product.type == 'Produk'
-                                          ? Colors.orange.withOpacity(0.15)
-                                          : Colors.blue.withOpacity(0.15),
-                                      borderRadius: BorderRadius.circular(6),
-                                    ),
-                                    child: Text(
-                                      product.type,
-                                      style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 12,
-                                        color: product.type == 'Produk'
-                                            ? Colors.orange
-                                            : Colors.blue,
-                                      ),
-                                    ),
-                                  ),
-                                if (product is Product) const SizedBox(width: 6),
-                                if (product is Product)
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 2),
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey.withOpacity(0.15),
-                                      borderRadius: BorderRadius.circular(6),
-                                    ),
-                                    child: Text(
-                                      product.category,
-                                      style: const TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontSize: 12,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          ),
-                        ],
+            children: items.map<Widget>((product) {
+              return SizedBox(
+                width: 160,
+                height: 220,
+                child: CustomCard(
+                  padding: EdgeInsets.zero,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: ProductCard(
+                          product: product,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    ProductDetailPage(product: product),
+                              ),
+                            );
+                          },
+                        ),
                       ),
-                    ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: product.type == 'Produk'
+                                    ? Colors.orange.withOpacity(0.15)
+                                    : Colors.blue.withOpacity(0.15),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Text(
+                                product.type,
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                  color: product.type == 'Produk'
+                                      ? Colors.orange
+                                      : Colors.blue,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 6),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.withOpacity(0.15),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Text(
+                                product.categoryName,
+                                style: const TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                )
-                .toList(),
+                ),
+              );
+            }).toList(),
           ),
         ),
         const SizedBox(height: 20),

@@ -23,7 +23,7 @@ class ProductDetailPage extends StatelessWidget {
           return Scaffold(
             appBar: AppBar(
               title: Text(
-                product.title,
+                product.name, // Properti `name` dari model `Product`
                 style: const TextStyle(
                   fontFamily: 'Poppins',
                   fontWeight: FontWeight.bold,
@@ -47,7 +47,7 @@ class ProductDetailPage extends StatelessWidget {
                       bottomRight: Radius.circular(24),
                     ),
                     child: Image.network(
-                      product.image,
+                      product.images.isNotEmpty ? product.images.first : '',
                       height: 260,
                       width: double.infinity,
                       fit: BoxFit.cover,
@@ -61,7 +61,7 @@ class ProductDetailPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          product.title,
+                          product.name,
                           style: const TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 24,
@@ -71,7 +71,7 @@ class ProductDetailPage extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          product.price,
+                          'Rp ${product.price}',
                           style: const TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 20,
@@ -110,7 +110,7 @@ class ProductDetailPage extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(6),
                               ),
                               child: Text(
-                                product.category,
+                                product.categoryName,
                                 style: const TextStyle(
                                   fontFamily: 'Poppins',
                                   fontSize: 12,
@@ -122,7 +122,7 @@ class ProductDetailPage extends StatelessWidget {
                         ),
                         const SizedBox(height: 18),
                         Text(
-                          product.description,
+                          product.description ?? 'No description available.',
                           style: const TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 15,

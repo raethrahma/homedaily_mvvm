@@ -12,28 +12,31 @@ class ProductCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: SizedBox(
-        height: 200, // Pastikan tinggi tetap agar tidak overflow
+        height: 200, // Tinggi tetap agar tidak overflow
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
               child: Image.network(
-                product.image,
-                height: 100, // Lebih kecil dari sebelumnya
+                product.images.isNotEmpty
+                    ? product.images.first
+                    : 'https://via.placeholder.com/150', // Placeholder jika tidak ada gambar
+                height: 100, // Tinggi gambar
                 width: double.infinity,
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
+                errorBuilder: (context, error, stackTrace) =>
+                    const Icon(Icons.error), // Penanganan error gambar
               ),
             ),
             const SizedBox(height: 4),
             Padding(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(8.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    product.title,
+                    product.name, // Sesuaikan dengan atribut 'name' dari model Product
                     style: const TextStyle(
                       fontFamily: 'Poppins',
                       fontWeight: FontWeight.bold,
@@ -44,7 +47,7 @@ class ProductCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    product.price,
+                    product.price, // Sesuaikan dengan atribut 'price' dari model Product
                     style: const TextStyle(
                       fontFamily: 'Poppins',
                       color: Colors.orange,

@@ -10,7 +10,7 @@ class ProductDetailViewModel extends ChangeNotifier {
   bool get isFavorite => _isFavorite;
 
   String get type => product.type; // 'Produk' atau 'Jasa'
-  String get category => product.category; // 'Produk' atau 'Jasa'
+  String get category => product.categoryName; // Menggunakan categoryName dari model
 
   void toggleFavorite() {
     _isFavorite = !_isFavorite;
@@ -19,13 +19,13 @@ class ProductDetailViewModel extends ChangeNotifier {
 
   void shareProduct() {
     // Implementasi fitur share (misal: menggunakan package share_plus)
-    // Share.share('Cek produk ini: ${product.title}');
-    debugPrint('Sharing product: ${product.title}');
+    // Share.share('Cek produk ini: ${product.name}');
+    debugPrint('Sharing product: ${product.name}');
   }
 
   void addToCart() {
     // Implementasi logika tambah ke cart
-    debugPrint('Added ${product.title} to cart');
+    debugPrint('Added ${product.name} to cart');
     // notifyListeners(); // Jika ingin update state
   }
 }

@@ -1,41 +1,34 @@
 class Product {
-  final String id;
-  final String image;
-  final String title;
-  final String description;
+  final int id;
+  final String name;
+  final String? description;
   final String price;
-  final String type; // 'Produk' atau 'Jasa'
-  final String category; // 'Produk' atau 'Jasa' saja
+  final int stock;
+  final String categoryName;
+  final String type; // Type diambil dari categoryName
+  final List<String> images;
 
   Product({
     required this.id,
-    required this.image,
-    required this.title,
-    required this.description,
+    required this.name,
+    this.description,
     required this.price,
-    required this.type,
-    required this.category,
-  });
+    required this.stock,
+    required this.categoryName,
+    required this.images,
+  }) : type = categoryName;
 
-  Product copyWith({
-    String? id,
-    String? image,
-    String? title,
-    String? description,
-    String? price,
-    String? type,
-    String? category,
-  }) {
+  factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
-      id: id ?? this.id,
-      image: image ?? this.image,
-      title: title ?? this.title,
-      description: description ?? this.description,
-      price: price ?? this.price,
-      type: type ?? this.type,
-      category: category ?? this.category,
+      id: json['id'] ?? 0,
+      name: json['name'] ?? 'Unknown',
+      description: json['description'],
+      price: json['price'] ?? '0.0',
+      stock: json['stock'] ?? 0,
+      categoryName: json['category']?['name'] ?? 'Unknown',
+      images: (json['images'] as List<dynamic>)
+          .map((image) => image['path'] as String)
+          .toList(),
     );
   }
-
-  // Hapus factory fromJson dan toJson jika tidak menggunakan API/JSON
 }

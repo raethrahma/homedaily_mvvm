@@ -136,9 +136,9 @@ class MyApp extends StatelessWidget {
           return _buildRoute(
             ChatDetailPage(
               chat: Chat(
-                id: args.id,
-                name: args.title,
-                image: args.image,
+                id: args.id.toString(),
+                name: args.name,
+                image: args.images.isNotEmpty ? args.images[0] : '',
                 lastMessage: '',
                 time: '',
                 unread: 0,
@@ -175,3 +175,4 @@ class MyApp extends StatelessWidget {
     return MaterialPageRoute(builder: (_) => page);
   }
 }
+

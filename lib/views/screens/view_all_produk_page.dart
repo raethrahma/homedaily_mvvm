@@ -87,7 +87,7 @@ class ViewAllProduk extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(6),
                               ),
                               child: Text(
-                                product.category,
+                                product.categoryName,
                                 style: const TextStyle(
                                   fontFamily: 'Poppins',
                                   fontSize: 12,

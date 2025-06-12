@@ -20,8 +20,9 @@ class TransactionItem extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Nama produk
             Text(
-              transaction.product.title,
+              transaction.product.name,
               style: const TextStyle(
                 fontFamily: 'Poppins',
                 fontWeight: FontWeight.bold,
@@ -29,6 +30,7 @@ class TransactionItem extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
+            // Status transaksi
             Text(
               'Status: ${transaction.status.name}',
               style: const TextStyle(
@@ -36,8 +38,9 @@ class TransactionItem extends StatelessWidget {
                 color: Colors.grey,
               ),
             ),
+            // Harga produk
             Text(
-              transaction.price,
+              'Rp ${transaction.price}',
               style: const TextStyle(
                 fontFamily: 'Poppins',
                 color: Colors.deepOrange,
