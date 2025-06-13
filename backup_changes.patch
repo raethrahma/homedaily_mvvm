@@ -1,900 +1,972 @@
 diff --git a/backup_changes.patch b/backup_changes.patch
-index 489f71f..e69de29 100644
+index 4db2c3b..e69de29 100644
 --- a/backup_changes.patch
 +++ b/backup_changes.patch
-@@ -1,435 +0,0 @@
--diff --git a/lib/models/product.dart b/lib/models/product.dart
--index 0893718..76c5f0d 100644
----- a/lib/models/product.dart
--+++ b/lib/models/product.dart
--@@ -5,7 +5,6 @@ class Product {
--   final String price;
--   final int stock;
--   final String categoryName;
---  final String type; // Type diambil dari categoryName
--   final List<String> images;
-- 
--   Product({
--@@ -16,7 +15,11 @@ class Product {
--     required this.stock,
--     required this.categoryName,
--     required this.images,
---  }) : type = categoryName;
--+  });
--+
--+  // Getter untuk memudahkan filter jasa/produk
--+  bool get isService => categoryName.toLowerCase() == 'jasa';
--+  String get type => isService ? 'jasa' : 'produk';
-- 
--   factory Product.fromJson(Map<String, dynamic> json) {
--     return Product(
--@@ -31,4 +34,4 @@ class Product {
--           .toList(),
--     );
--   }
---}
--+}
--\ No newline at end of file
--diff --git a/lib/viewmodels/home_viewmodel.dart b/lib/viewmodels/home_viewmodel.dart
--index e23ef91..ed0084b 100644
----- a/lib/viewmodels/home_viewmodel.dart
--+++ b/lib/viewmodels/home_viewmodel.dart
--@@ -11,9 +11,9 @@ class HomeViewModel extends ChangeNotifier {
-- 
--   // Getter untuk memisahkan data berdasarkan kategori
--   List<Product> get products =>
---      _allProducts.where((product) => product.type == 'Produk').toList();
--+      _allProducts.where((product) => product.type != 'jasa').toList();
--   List<Product> get services =>
---      _allProducts.where((product) => product.type == 'Jasa').toList();
--+      _allProducts.where((product) => product.type == 'jasa').toList();
--   bool get isLoading => _isLoading;
--   String get errorMessage => _errorMessage;
-- 
--diff --git a/lib/viewmodels/product_detail_viewmodel.dart b/lib/viewmodels/product_detail_viewmodel.dart
--index 9e46df2..7fbe852 100644
----- a/lib/viewmodels/product_detail_viewmodel.dart
--+++ b/lib/viewmodels/product_detail_viewmodel.dart
--@@ -9,8 +9,9 @@ class ProductDetailViewModel extends ChangeNotifier {
-- 
--   bool get isFavorite => _isFavorite;
-- 
---  String get type => product.type; // 'Produk' atau 'Jasa'
---  String get category => product.categoryName; // Menggunakan categoryName dari model
--+  // Getter label kategori, konsisten dengan HomeViewModel
--+  String get typeLabel => product.type == 'jasa' ? 'Jasa' : 'Produk';
--+  String get category => product.categoryName;
-- 
--   void toggleFavorite() {
--     _isFavorite = !_isFavorite;
--@@ -18,14 +19,10 @@ class ProductDetailViewModel extends ChangeNotifier {
--   }
-- 
--   void shareProduct() {
---    // Implementasi fitur share (misal: menggunakan package share_plus)
---    // Share.share('Cek produk ini: ${product.name}');
--     debugPrint('Sharing product: ${product.name}');
--   }
-- 
--   void addToCart() {
---    // Implementasi logika tambah ke cart
--     debugPrint('Added ${product.name} to cart');
---    // notifyListeners(); // Jika ingin update state
--   }
---}
--+}
--\ No newline at end of file
--diff --git a/lib/viewmodels/view_all_produk_viewmodel.dart b/lib/viewmodels/view_all_produk_viewmodel.dart
--index 4d20623..d27909b 100644
----- a/lib/viewmodels/view_all_produk_viewmodel.dart
--+++ b/lib/viewmodels/view_all_produk_viewmodel.dart
--@@ -5,22 +5,23 @@ import 'package:homedaily_mvvm/services/api_service.dart';
-- class ViewAllProdukViewModel extends ChangeNotifier {
--   final ApiService _apiService = ApiService();
-- 
---  List<Product> _products = []; // Produk dari API
--+  List<Product> _products = []; // Semua produk dari API
--   bool _isLoading = false;
--   String _errorMessage = '';
-- 
---  // Getter
---  List<Product> get products => _products;
--+  // Getter untuk semua produk (tanpa filter)
--+  List<Product> get allProducts => _products;
--+
--   bool get isLoading => _isLoading;
--   String get errorMessage => _errorMessage;
-- 
---  // Fungsi untuk mengambil data dari API
--   Future<void> fetchProducts() async {
--     _isLoading = true;
--     notifyListeners();
-- 
--     try {
--       _products = await _apiService.fetchProducts();
--+      print('Produk dari API: ${_products.map((e) => '${e.name} (${e.categoryName})').toList()}');
--       _errorMessage = '';
--     } catch (e) {
--       _errorMessage = 'Failed to fetch products: $e';
--@@ -29,25 +30,4 @@ class ViewAllProdukViewModel extends ChangeNotifier {
--       notifyListeners();
--     }
--   }
---
---  // Fungsi untuk menambah produk
---  void addProduct(Product product) {
---    _products.add(product);
---    notifyListeners();
---  }
---
---  // Fungsi untuk menghapus produk berdasarkan ID
---  void removeProduct(int id) {
---    _products.removeWhere((product) => product.id == id);
---    notifyListeners();
---  }
---
---  // Fungsi untuk memperbarui produk berdasarkan ID
---  void updateProduct(int id, Product updatedProduct) {
---    final index = _products.indexWhere((product) => product.id == id);
---    if (index != -1) {
---      _products[index] = updatedProduct;
---      notifyListeners();
---    }
---  }
---}
--+}
--\ No newline at end of file
--diff --git a/lib/views/screens/view_all_produk_page.dart b/lib/views/screens/view_all_produk_page.dart
--index 4014b25..abf2797 100644
----- a/lib/views/screens/view_all_produk_page.dart
--+++ b/lib/views/screens/view_all_produk_page.dart
--@@ -1,9 +1,9 @@
+@@ -1,900 +0,0 @@
+-diff --git a/backup_changes.patch b/backup_changes.patch
+-index 489f71f..e69de29 100644
+---- a/backup_changes.patch
+-+++ b/backup_changes.patch
+-@@ -1,435 +0,0 @@
+--diff --git a/lib/models/product.dart b/lib/models/product.dart
+--index 0893718..76c5f0d 100644
+----- a/lib/models/product.dart
+--+++ b/lib/models/product.dart
+--@@ -5,7 +5,6 @@ class Product {
+--   final String price;
+--   final int stock;
+--   final String categoryName;
+---  final String type; // Type diambil dari categoryName
+--   final List<String> images;
+-- 
+--   Product({
+--@@ -16,7 +15,11 @@ class Product {
+--     required this.stock,
+--     required this.categoryName,
+--     required this.images,
+---  }) : type = categoryName;
+--+  });
+--+
+--+  // Getter untuk memudahkan filter jasa/produk
+--+  bool get isService => categoryName.toLowerCase() == 'jasa';
+--+  String get type => isService ? 'jasa' : 'produk';
+-- 
+--   factory Product.fromJson(Map<String, dynamic> json) {
+--     return Product(
+--@@ -31,4 +34,4 @@ class Product {
+--           .toList(),
+--     );
+--   }
+---}
+--+}
+--\ No newline at end of file
+--diff --git a/lib/viewmodels/home_viewmodel.dart b/lib/viewmodels/home_viewmodel.dart
+--index e23ef91..ed0084b 100644
+----- a/lib/viewmodels/home_viewmodel.dart
+--+++ b/lib/viewmodels/home_viewmodel.dart
+--@@ -11,9 +11,9 @@ class HomeViewModel extends ChangeNotifier {
+-- 
+--   // Getter untuk memisahkan data berdasarkan kategori
+--   List<Product> get products =>
+---      _allProducts.where((product) => product.type == 'Produk').toList();
+--+      _allProducts.where((product) => product.type != 'jasa').toList();
+--   List<Product> get services =>
+---      _allProducts.where((product) => product.type == 'Jasa').toList();
+--+      _allProducts.where((product) => product.type == 'jasa').toList();
+--   bool get isLoading => _isLoading;
+--   String get errorMessage => _errorMessage;
+-- 
+--diff --git a/lib/viewmodels/product_detail_viewmodel.dart b/lib/viewmodels/product_detail_viewmodel.dart
+--index 9e46df2..7fbe852 100644
+----- a/lib/viewmodels/product_detail_viewmodel.dart
+--+++ b/lib/viewmodels/product_detail_viewmodel.dart
+--@@ -9,8 +9,9 @@ class ProductDetailViewModel extends ChangeNotifier {
+-- 
+--   bool get isFavorite => _isFavorite;
+-- 
+---  String get type => product.type; // 'Produk' atau 'Jasa'
+---  String get category => product.categoryName; // Menggunakan categoryName dari model
+--+  // Getter label kategori, konsisten dengan HomeViewModel
+--+  String get typeLabel => product.type == 'jasa' ? 'Jasa' : 'Produk';
+--+  String get category => product.categoryName;
+-- 
+--   void toggleFavorite() {
+--     _isFavorite = !_isFavorite;
+--@@ -18,14 +19,10 @@ class ProductDetailViewModel extends ChangeNotifier {
+--   }
+-- 
+--   void shareProduct() {
+---    // Implementasi fitur share (misal: menggunakan package share_plus)
+---    // Share.share('Cek produk ini: ${product.name}');
+--     debugPrint('Sharing product: ${product.name}');
+--   }
+-- 
+--   void addToCart() {
+---    // Implementasi logika tambah ke cart
+--     debugPrint('Added ${product.name} to cart');
+---    // notifyListeners(); // Jika ingin update state
+--   }
+---}
+--+}
+--\ No newline at end of file
+--diff --git a/lib/viewmodels/view_all_produk_viewmodel.dart b/lib/viewmodels/view_all_produk_viewmodel.dart
+--index 4d20623..d27909b 100644
+----- a/lib/viewmodels/view_all_produk_viewmodel.dart
+--+++ b/lib/viewmodels/view_all_produk_viewmodel.dart
+--@@ -5,22 +5,23 @@ import 'package:homedaily_mvvm/services/api_service.dart';
+-- class ViewAllProdukViewModel extends ChangeNotifier {
+--   final ApiService _apiService = ApiService();
+-- 
+---  List<Product> _products = []; // Produk dari API
+--+  List<Product> _products = []; // Semua produk dari API
+--   bool _isLoading = false;
+--   String _errorMessage = '';
+-- 
+---  // Getter
+---  List<Product> get products => _products;
+--+  // Getter untuk semua produk (tanpa filter)
+--+  List<Product> get allProducts => _products;
+--+
+--   bool get isLoading => _isLoading;
+--   String get errorMessage => _errorMessage;
+-- 
+---  // Fungsi untuk mengambil data dari API
+--   Future<void> fetchProducts() async {
+--     _isLoading = true;
+--     notifyListeners();
+-- 
+--     try {
+--       _products = await _apiService.fetchProducts();
+--+      print('Produk dari API: ${_products.map((e) => '${e.name} (${e.categoryName})').toList()}');
+--       _errorMessage = '';
+--     } catch (e) {
+--       _errorMessage = 'Failed to fetch products: $e';
+--@@ -29,25 +30,4 @@ class ViewAllProdukViewModel extends ChangeNotifier {
+--       notifyListeners();
+--     }
+--   }
+---
+---  // Fungsi untuk menambah produk
+---  void addProduct(Product product) {
+---    _products.add(product);
+---    notifyListeners();
+---  }
+---
+---  // Fungsi untuk menghapus produk berdasarkan ID
+---  void removeProduct(int id) {
+---    _products.removeWhere((product) => product.id == id);
+---    notifyListeners();
+---  }
+---
+---  // Fungsi untuk memperbarui produk berdasarkan ID
+---  void updateProduct(int id, Product updatedProduct) {
+---    final index = _products.indexWhere((product) => product.id == id);
+---    if (index != -1) {
+---      _products[index] = updatedProduct;
+---      notifyListeners();
+---    }
+---  }
+---}
+--+}
+--\ No newline at end of file
+--diff --git a/lib/views/screens/view_all_produk_page.dart b/lib/views/screens/view_all_produk_page.dart
+--index 4014b25..abf2797 100644
+----- a/lib/views/screens/view_all_produk_page.dart
+--+++ b/lib/views/screens/view_all_produk_page.dart
+--@@ -1,9 +1,9 @@
+-- import 'package:flutter/material.dart';
+-- import 'package:homedaily_mvvm/viewmodels/view_all_produk_viewmodel.dart';
+---import 'package:homedaily_mvvm/views/screens/widgets/product_card.dart';
+-- import 'package:homedaily_mvvm/views/screens/widgets/custom_card.dart';
+-- import 'package:provider/provider.dart';
+-- import 'package:homedaily_mvvm/views/screens/detail_product_page.dart';
+--+import 'package:homedaily_mvvm/views/screens/widgets/custom_bottom_navbar.dart';
+-- 
+-- class ViewAllProduk extends StatelessWidget {
+--   const ViewAllProduk({super.key});
+--@@ -11,7 +11,7 @@ class ViewAllProduk extends StatelessWidget {
+--   @override
+--   Widget build(BuildContext context) {
+--     return ChangeNotifierProvider(
+---      create: (_) => ViewAllProdukViewModel(),
+--+      create: (_) => ViewAllProdukViewModel()..fetchProducts(),
+--       child: Consumer<ViewAllProdukViewModel>(
+--         builder: (context, viewModel, child) {
+--           return Scaffold(
+--@@ -26,86 +26,140 @@ class ViewAllProduk extends StatelessWidget {
+--               ),
+--               backgroundColor: Colors.orange,
+--             ),
+---            body: GridView.builder(
+---              padding: const EdgeInsets.all(16),
+---              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+---                crossAxisCount: 2,
+---                childAspectRatio: 0.68,
+---                crossAxisSpacing: 16,
+---                mainAxisSpacing: 16,
+---              ),
+---              itemCount: viewModel.products.length,
+---              itemBuilder: (context, index) {
+---                final product = viewModel.products[index];
+---                return CustomCard(
+---                  padding: EdgeInsets.zero,
+---                  child: Column(
+---                    crossAxisAlignment: CrossAxisAlignment.start,
+--+            body: viewModel.isLoading
+--+                ? const Center(child: CircularProgressIndicator())
+--+                : viewModel.errorMessage.isNotEmpty
+--+                    ? Center(child: Text(viewModel.errorMessage))
+--+                    : _buildGrid(context, viewModel.allProducts, 'Tidak ada produk.'),
+--+            bottomNavigationBar: const CustomBottomNavBar(currentIndex: 1),
+--+          );
+--+        },
+--+      ),
+--+    );
+--+  }
+--+
+--+  Widget _buildGrid(BuildContext context, List products, String emptyText) {
+--+    if (products.isEmpty) {
+--+      return Center(child: Text(emptyText));
+--+    }
+--+    return GridView.builder(
+--+      padding: const EdgeInsets.all(16),
+--+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+--+        crossAxisCount: 2,
+--+        childAspectRatio: 0.68,
+--+        crossAxisSpacing: 16,
+--+        mainAxisSpacing: 16,
+--+      ),
+--+      itemCount: products.length,
+--+      itemBuilder: (context, index) {
+--+        final product = products[index];
+--+        return CustomCard(
+--+          padding: EdgeInsets.zero,
+--+          child: InkWell(
+--+            borderRadius: BorderRadius.circular(12),
+--+            onTap: () {
+--+              Navigator.push(
+--+                context,
+--+                MaterialPageRoute(
+--+                  builder: (_) => ProductDetailPage(product: product),
+--+                ),
+--+              );
+--+            },
+--+            child: Column(
+--+              crossAxisAlignment: CrossAxisAlignment.start,
+--+              children: [
+--+                // Gambar produk (jika ada)
+--+                if (product.images.isNotEmpty)
+--+                  ClipRRect(
+--+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+--+                    child: Image.network(
+--+                      product.images.first,
+--+                      width: double.infinity,
+--+                      height: 100,
+--+                      fit: BoxFit.cover,
+--+                      errorBuilder: (context, error, stackTrace) => const Icon(Icons.image_not_supported),
+--+                    ),
+--+                  )
+--+                else
+--+                  Container(
+--+                    width: double.infinity,
+--+                    height: 100,
+--+                    color: Colors.grey[200],
+--+                    child: const Icon(Icons.image, size: 40, color: Colors.grey),
+--+                  ),
+--+                const SizedBox(height: 8),
+--+                Padding(
+--+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+--+                  child: Text(
+--+                    product.name,
+--+                    style: const TextStyle(
+--+                      fontWeight: FontWeight.bold,
+--+                      fontSize: 14,
+--+                    ),
+--+                    maxLines: 2,
+--+                    overflow: TextOverflow.ellipsis,
+--+                  ),
+--+                ),
+--+                Padding(
+--+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+--+                  child: Text(
+--+                    'Rp${product.price}',
+--+                    style: const TextStyle(
+--+                      color: Colors.orange,
+--+                      fontWeight: FontWeight.bold,
+--+                      fontSize: 13,
+--+                    ),
+--+                  ),
+--+                ),
+--+                const Spacer(),
+--+                Padding(
+--+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+--+                  child: Row(
+--                     children: [
+---                      Expanded(
+---                        child: ProductCard(
+---                          product: product,
+---                          onTap: () {
+---                            Navigator.push(
+---                              context,
+---                              MaterialPageRoute(
+---                                builder: (_) => ProductDetailPage(product: product),
+---                              ),
+---                            );
+---                          },
+--+                      Container(
+--+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+--+                        decoration: BoxDecoration(
+--+                          color: product.type == 'produk'
+--+                              ? Colors.orange.withOpacity(0.15)
+--+                              : Colors.blue.withOpacity(0.15),
+--+                          borderRadius: BorderRadius.circular(6),
+--+                        ),
+--+                        child: Text(
+--+                          product.type == 'jasa' ? 'Jasa' : 'Produk',
+--+                          style: TextStyle(
+--+                            fontFamily: 'Poppins',
+--+                            fontWeight: FontWeight.bold,
+--+                            fontSize: 12,
+--+                            color: product.type == 'produk'
+--+                                ? Colors.orange
+--+                                : Colors.blue,
+--+                          ),
+--                         ),
+--                       ),
+---                      Padding(
+---                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+---                        child: Row(
+---                          children: [
+---                            Container(
+---                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+---                              decoration: BoxDecoration(
+---                                color: product.type == 'Produk'
+---                                    ? Colors.orange.withOpacity(0.15)
+---                                    : Colors.blue.withOpacity(0.15),
+---                                borderRadius: BorderRadius.circular(6),
+---                              ),
+---                              child: Text(
+---                                product.type,
+---                                style: TextStyle(
+---                                  fontFamily: 'Poppins',
+---                                  fontWeight: FontWeight.bold,
+---                                  fontSize: 12,
+---                                  color: product.type == 'Produk'
+---                                      ? Colors.orange
+---                                      : Colors.blue,
+---                                ),
+---                              ),
+---                            ),
+---                            const SizedBox(width: 6),
+---                            Container(
+---                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+---                              decoration: BoxDecoration(
+---                                color: Colors.grey.withOpacity(0.15),
+---                                borderRadius: BorderRadius.circular(6),
+---                              ),
+---                              child: Text(
+---                                product.categoryName,
+---                                style: const TextStyle(
+---                                  fontFamily: 'Poppins',
+---                                  fontSize: 12,
+---                                  color: Colors.grey,
+---                                ),
+---                              ),
+---                            ),
+---                          ],
+--+                      const SizedBox(width: 6),
+--+                      Container(
+--+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+--+                        decoration: BoxDecoration(
+--+                          color: Colors.grey.withOpacity(0.15),
+--+                          borderRadius: BorderRadius.circular(6),
+--+                        ),
+--+                        child: Text(
+--+                          product.categoryName,
+--+                          style: const TextStyle(
+--+                            fontFamily: 'Poppins',
+--+                            fontSize: 12,
+--+                            color: Colors.grey,
+--+                          ),
+--                         ),
+--                       ),
+--                     ],
+--                   ),
+---                );
+---              },
+--+                ),
+--+              ],
+--             ),
+---          );
+---        },
+---      ),
+--+          ),
+--+        );
+--+      },
+--     );
+--   }
+-- }
+--\ No newline at end of file
+--diff --git a/pubspec.lock b/pubspec.lock
+--index ec058fc..f159e0b 100644
+----- a/pubspec.lock
+--+++ b/pubspec.lock
+--@@ -21,10 +21,10 @@ packages:
+--     dependency: transitive
+--     description:
+--       name: async
+---      sha256: d2872f9c19731c2e5f10444b14686eb7cc85c76274bd6c16e1816bff9a3bab63
+--+      sha256: "758e6d74e971c3e5aceb4110bfd6698efc7f501675bcfe0c775459a8140750eb"
+--       url: "https://pub.dev"
+--     source: hosted
+---    version: "2.12.0"
+--+    version: "2.13.0"
+--   boolean_selector:
+--     dependency: transitive
+--     description:
+--@@ -133,10 +133,10 @@ packages:
+--     dependency: transitive
+--     description:
+--       name: fake_async
+---      sha256: "6a95e56b2449df2273fd8c45a662d6947ce1ebb7aafe80e550a3f68297f3cacc"
+--+      sha256: "5368f224a74523e8d2e7399ea1638b37aecfca824a3cc4dfdf77bf1fa905ac44"
+--       url: "https://pub.dev"
+--     source: hosted
+---    version: "1.3.2"
+--+    version: "1.3.3"
+--   ffi:
+--     dependency: transitive
+--     description:
+--@@ -300,10 +300,10 @@ packages:
+--     dependency: transitive
+--     description:
+--       name: leak_tracker
+---      sha256: c35baad643ba394b40aac41080300150a4f08fd0fd6a10378f8f7c6bc161acec
+--+      sha256: "6bb818ecbdffe216e81182c2f0714a2e62b593f4a4f13098713ff1685dfb6ab0"
+--       url: "https://pub.dev"
+--     source: hosted
+---    version: "10.0.8"
+--+    version: "10.0.9"
+--   leak_tracker_flutter_testing:
+--     dependency: transitive
+--     description:
+--@@ -673,10 +673,10 @@ packages:
+--     dependency: transitive
+--     description:
+--       name: vm_service
+---      sha256: "0968250880a6c5fe7edc067ed0a13d4bae1577fe2771dcf3010d52c4a9d3ca14"
+--+      sha256: ddfa8d30d89985b96407efce8acbdd124701f96741f2d981ca860662f1c0dc02
+--       url: "https://pub.dev"
+--     source: hosted
+---    version: "14.3.1"
+--+    version: "15.0.0"
+--   web:
+--     dependency: transitive
+--     description:
+-diff --git a/lib/viewmodels/explore_viewmodel.dart b/lib/viewmodels/explore_viewmodel.dart
+-index ed34d11..0823933 100644
+---- a/lib/viewmodels/explore_viewmodel.dart
+-+++ b/lib/viewmodels/explore_viewmodel.dart
+-@@ -1,44 +1,20 @@
 - import 'package:flutter/material.dart';
-- import 'package:homedaily_mvvm/viewmodels/view_all_produk_viewmodel.dart';
---import 'package:homedaily_mvvm/views/screens/widgets/product_card.dart';
-- import 'package:homedaily_mvvm/views/screens/widgets/custom_card.dart';
-- import 'package:provider/provider.dart';
-- import 'package:homedaily_mvvm/views/screens/detail_product_page.dart';
--+import 'package:homedaily_mvvm/views/screens/widgets/custom_bottom_navbar.dart';
+- import 'package:homedaily_mvvm/models/product.dart';
+-+import 'package:homedaily_mvvm/services/api_service.dart';
 - 
-- class ViewAllProduk extends StatelessWidget {
--   const ViewAllProduk({super.key});
--@@ -11,7 +11,7 @@ class ViewAllProduk extends StatelessWidget {
--   @override
--   Widget build(BuildContext context) {
--     return ChangeNotifierProvider(
---      create: (_) => ViewAllProdukViewModel(),
--+      create: (_) => ViewAllProdukViewModel()..fetchProducts(),
--       child: Consumer<ViewAllProdukViewModel>(
--         builder: (context, viewModel, child) {
--           return Scaffold(
--@@ -26,86 +26,140 @@ class ViewAllProduk extends StatelessWidget {
--               ),
--               backgroundColor: Colors.orange,
+- class ExploreViewModel extends ChangeNotifier {
+--  final List<Product> _products = [
+--    Product(
+--      id: 1,
+--      name: 'Meja Minimalis',
+--      description: 'Meja kayu berkualitas tinggi',
+--      price: '247.50',
+--      stock: 5,
+--      categoryName: 'Produk',
+--      images: ['https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc'],
+--    ),
+--    Product(
+--      id: 2,
+--      name: 'Lampu Kuning Cantik',
+--      description: 'Lampu dekorasi estetik',
+--      price: '247.50',
+--      stock: 10,
+--      categoryName: 'Produk',
+--      images: ['https://images.unsplash.com/photo-1586023492125-27b2c045efd7'],
+--    ),
+--    Product(
+--      id: 3,
+--      name: 'Cleaning Service',
+--      description: 'Jasa cleaning service profesional',
+--      price: '500.00',
+--      stock: 0,
+--      categoryName: 'Jasa',
+--      images: ['https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d'],
+--    ),
+--  ];
+-+  final ApiService _apiService = ApiService();
+- 
+-+  List<Product> _products = [];
+-   final List<String> _filters = ['All', 'Produk', 'Jasa'];
+-   String _selectedFilter = 'All';
+-   final List<String> _searchHistory = [];
+-   List<Product> _filteredProducts = [];
+-+  bool _isLoading = false;
+-+  String? _errorMessage;
+- 
+-   ExploreViewModel() {
+--    _filteredProducts = _products;
+-+    fetchProducts();
+-   }
+- 
+-   List<Product> get products => _products;
+-@@ -46,6 +22,25 @@ class ExploreViewModel extends ChangeNotifier {
+-   List<String> get filters => _filters;
+-   String get selectedFilter => _selectedFilter;
+-   List<String> get searchHistory => _searchHistory;
+-+  bool get isLoading => _isLoading;
+-+  String? get errorMessage => _errorMessage;
+-+
+-+  Future<void> fetchProducts() async {
+-+    _isLoading = true;
+-+    _errorMessage = null;
+-+    notifyListeners();
+-+    try {
+-+      _products = await _apiService.fetchProducts();
+-+      filterProducts('');
+-+    } catch (e) {
+-+      _errorMessage = e.toString();
+-+      _products = [];
+-+      _filteredProducts = [];
+-+      notifyListeners();
+-+    }
+-+    _isLoading = false;
+-+    notifyListeners();
+-+  }
+- 
+-   void updateFilter(String filter) {
+-     if (_filters.contains(filter)) {
+-@@ -56,20 +51,22 @@ class ExploreViewModel extends ChangeNotifier {
+-   }
+- 
+-   void filterProducts(String query) {
+-+    List<Product> baseList;
+-+    if (_selectedFilter == 'All') {
+-+      baseList = _products;
+-+    } else {
+-+      baseList = _products
+-+          .where((product) => product.categoryName.toLowerCase() == _selectedFilter.toLowerCase())
+-+          .toList();
+-+    }
+-+
+-     if (query.isEmpty) {
+--      if (_selectedFilter == 'All') {
+--        _filteredProducts = _products;
+--      } else {
+--        _filteredProducts = _products
+--            .where((product) => product.categoryName == _selectedFilter)
+--            .toList();
+--      }
+-+      _filteredProducts = baseList;
+-     } else {
+--      _filteredProducts = _products
+-+      _filteredProducts = baseList
+-           .where((product) =>
+-               product.name.toLowerCase().contains(query.toLowerCase()) ||
+--              (product.description?.toLowerCase().contains(query.toLowerCase()) ??
+--                  false))
+-+              (product.description?.toLowerCase().contains(query.toLowerCase()) ?? false))
+-           .toList();
+-     }
+-     notifyListeners();
+-@@ -86,4 +83,4 @@ class ExploreViewModel extends ChangeNotifier {
+-     _searchHistory.remove(query);
+-     notifyListeners();
+-   }
+--}
+-+}
+-\ No newline at end of file
+-diff --git a/lib/views/screens/explore_page.dart b/lib/views/screens/explore_page.dart
+-index 5bcedc1..0d6b1cc 100644
+---- a/lib/views/screens/explore_page.dart
+-+++ b/lib/views/screens/explore_page.dart
+-@@ -38,162 +38,176 @@ class ExplorePage extends StatelessWidget {
+-                 ),
+-               ],
 -             ),
---            body: GridView.builder(
---              padding: const EdgeInsets.all(16),
---              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
---                crossAxisCount: 2,
---                childAspectRatio: 0.68,
---                crossAxisSpacing: 16,
---                mainAxisSpacing: 16,
---              ),
---              itemCount: viewModel.products.length,
---              itemBuilder: (context, index) {
---                final product = viewModel.products[index];
---                return CustomCard(
---                  padding: EdgeInsets.zero,
---                  child: Column(
---                    crossAxisAlignment: CrossAxisAlignment.start,
+--            body: Column(
+--              children: [
+--                Padding(
+--                  padding: const EdgeInsets.all(16),
+--                  child: DropdownButton<String>(
+--                    isExpanded: true,
+--                    value: viewModel.selectedFilter,
+--                    items: viewModel.filters
+--                        .map(
+--                          (filter) => DropdownMenuItem(
+--                            value: filter,
+--                            child: Text(
+--                              filter,
+--                              style: const TextStyle(
+--                                fontFamily: 'Poppins',
+--                              ),
+--                            ),
+--                          ),
+--                        )
+--                        .toList(),
+--                    onChanged: (value) {
+--                      if (value != null) {
+--                        viewModel.updateFilter(value);
+--                      }
+--                    },
+--                  ),
+--                ),
+--                if (viewModel.searchHistory.isNotEmpty)
+--                  Padding(
+--                    padding: const EdgeInsets.symmetric(horizontal: 16),
+--                    child: Column(
+--                      crossAxisAlignment: CrossAxisAlignment.start,
+--                      children: [
+--                        const Text(
+--                          'Recent Searches',
+--                          style: TextStyle(
 -+            body: viewModel.isLoading
 -+                ? const Center(child: CircularProgressIndicator())
--+                : viewModel.errorMessage.isNotEmpty
--+                    ? Center(child: Text(viewModel.errorMessage))
--+                    : _buildGrid(context, viewModel.allProducts, 'Tidak ada produk.'),
--+            bottomNavigationBar: const CustomBottomNavBar(currentIndex: 1),
--+          );
--+        },
--+      ),
--+    );
--+  }
--+
--+  Widget _buildGrid(BuildContext context, List products, String emptyText) {
--+    if (products.isEmpty) {
--+      return Center(child: Text(emptyText));
--+    }
--+    return GridView.builder(
--+      padding: const EdgeInsets.all(16),
--+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
--+        crossAxisCount: 2,
--+        childAspectRatio: 0.68,
--+        crossAxisSpacing: 16,
--+        mainAxisSpacing: 16,
--+      ),
--+      itemCount: products.length,
--+      itemBuilder: (context, index) {
--+        final product = products[index];
--+        return CustomCard(
--+          padding: EdgeInsets.zero,
--+          child: InkWell(
--+            borderRadius: BorderRadius.circular(12),
--+            onTap: () {
--+              Navigator.push(
--+                context,
--+                MaterialPageRoute(
--+                  builder: (_) => ProductDetailPage(product: product),
--+                ),
--+              );
--+            },
--+            child: Column(
--+              crossAxisAlignment: CrossAxisAlignment.start,
--+              children: [
--+                // Gambar produk (jika ada)
--+                if (product.images.isNotEmpty)
--+                  ClipRRect(
--+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
--+                    child: Image.network(
--+                      product.images.first,
--+                      width: double.infinity,
--+                      height: 100,
--+                      fit: BoxFit.cover,
--+                      errorBuilder: (context, error, stackTrace) => const Icon(Icons.image_not_supported),
--+                    ),
--+                  )
--+                else
--+                  Container(
--+                    width: double.infinity,
--+                    height: 100,
--+                    color: Colors.grey[200],
--+                    child: const Icon(Icons.image, size: 40, color: Colors.grey),
--+                  ),
--+                const SizedBox(height: 8),
--+                Padding(
--+                  padding: const EdgeInsets.symmetric(horizontal: 8),
--+                  child: Text(
--+                    product.name,
--+                    style: const TextStyle(
--+                      fontWeight: FontWeight.bold,
--+                      fontSize: 14,
--+                    ),
--+                    maxLines: 2,
--+                    overflow: TextOverflow.ellipsis,
--+                  ),
--+                ),
--+                Padding(
--+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
--+                  child: Text(
--+                    'Rp${product.price}',
--+                    style: const TextStyle(
--+                      color: Colors.orange,
--+                      fontWeight: FontWeight.bold,
--+                      fontSize: 13,
--+                    ),
--+                  ),
--+                ),
--+                const Spacer(),
--+                Padding(
--+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
--+                  child: Row(
--                     children: [
---                      Expanded(
---                        child: ProductCard(
---                          product: product,
---                          onTap: () {
---                            Navigator.push(
---                              context,
---                              MaterialPageRoute(
---                                builder: (_) => ProductDetailPage(product: product),
---                              ),
+-+                : viewModel.errorMessage != null
+-+                    ? Center(
+-+                        child: Text(
+-+                          viewModel.errorMessage!,
+-+                          style: const TextStyle(
+-                             fontFamily: 'Poppins',
+--                            fontWeight: FontWeight.bold,
+-+                            color: Colors.red,
+-                           ),
+-                         ),
+--                        Wrap(
+--                          spacing: 8,
+--                          children: viewModel.searchHistory
+--                              .map(
+--                                (query) => Chip(
+--                                  label: Text(
+--                                    query,
+--                                    style: const TextStyle(
+--                                      fontFamily: 'Poppins',
+-+                      )
+-+                    : Column(
+-+                        children: [
+-+                          Padding(
+-+                            padding: const EdgeInsets.all(16),
+-+                            child: DropdownButton<String>(
+-+                              isExpanded: true,
+-+                              value: viewModel.selectedFilter,
+-+                              items: viewModel.filters
+-+                                  .map(
+-+                                    (filter) => DropdownMenuItem(
+-+                                      value: filter,
+-+                                      child: Text(
+-+                                        filter,
+-+                                        style: const TextStyle(
+-+                                          fontFamily: 'Poppins',
+-+                                        ),
+-+                                      ),
+-                                     ),
+--                                  ),
+--                                  onDeleted: () =>
+--                                      viewModel.removeSearchHistory(query),
+--                                ),
+--                              )
+--                              .toList(),
+--                        ),
+--                      ],
+--                    ),
+--                  ),
+--                Expanded(
+--                  child: viewModel.filteredProducts.isEmpty
+--                      ? const Center(
+--                          child: Text(
+--                            'Tidak ada produk atau jasa ditemukan.',
+--                            style: TextStyle(
+--                              fontFamily: 'Poppins',
+--                              color: Colors.grey,
+-+                                  )
+-+                                  .toList(),
+-+                              onChanged: (value) {
+-+                                if (value != null) {
+-+                                  viewModel.updateFilter(value);
+-+                                }
+-+                              },
+-                             ),
+-                           ),
+--                        )
+--                      : GridView.builder(
+--                          padding: const EdgeInsets.all(16),
+--                          gridDelegate:
+--                              const SliverGridDelegateWithFixedCrossAxisCount(
+--                            crossAxisCount: 2,
+--                            childAspectRatio: 0.75,
+--                            crossAxisSpacing: 16,
+--                            mainAxisSpacing: 16,
+--                          ),
+--                          itemCount: viewModel.filteredProducts.length,
+--                          itemBuilder: (context, index) {
+--                            final product = viewModel.filteredProducts[index];
+--                            return CustomCard(
+--                              padding: EdgeInsets.zero,
+-+                          if (viewModel.searchHistory.isNotEmpty)
+-+                            Padding(
+-+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+-                               child: Column(
+-                                 crossAxisAlignment: CrossAxisAlignment.start,
+-                                 children: [
+--                                  Expanded(
+--                                    child: ProductCard(
+--                                      product: product,
+--                                      onTap: () {
+--                                        Navigator.push(
+--                                          context,
+--                                          MaterialPageRoute(
+--                                            builder: (_) =>
+--                                                ProductDetailPage(product: product),
+--                                          ),
+--                                        );
+--                                      },
+-+                                  const Text(
+-+                                    'Recent Searches',
+-+                                    style: TextStyle(
+-+                                      fontFamily: 'Poppins',
+-+                                      fontWeight: FontWeight.bold,
+-                                     ),
+-                                   ),
+--                                  Padding(
+--                                    padding: const EdgeInsets.symmetric(
+--                                        horizontal: 8, vertical: 4),
+--                                    child: Row(
+--                                      children: [
+--                                        Container(
+--                                          padding: const EdgeInsets.symmetric(
+--                                              horizontal: 8, vertical: 2),
+--                                          decoration: BoxDecoration(
+--                                            color: product.type == 'Produk'
+--                                                ? Colors.orange.withOpacity(0.15)
+--                                                : Colors.blue.withOpacity(0.15),
+--                                            borderRadius:
+--                                                BorderRadius.circular(6),
+--                                          ),
+--                                          child: Text(
+--                                            product.type,
+--                                            style: const TextStyle(
+--                                              fontFamily: 'Poppins',
+--                                              fontWeight: FontWeight.bold,
+--                                              fontSize: 12,
+--                                              color: Colors.orange,
+-+                                  Wrap(
+-+                                    spacing: 8,
+-+                                    children: viewModel.searchHistory
+-+                                        .map(
+-+                                          (query) => Chip(
+-+                                            label: Text(
+-+                                              query,
+-+                                              style: const TextStyle(
+-+                                                fontFamily: 'Poppins',
+-+                                              ),
+-                                             ),
+-+                                            onDeleted: () =>
+-+                                                viewModel.removeSearchHistory(query),
+-                                           ),
+--                                        ),
+--                                        const SizedBox(width: 6),
+--                                        Container(
+--                                          padding: const EdgeInsets.symmetric(
+--                                              horizontal: 8, vertical: 2),
+--                                          decoration: BoxDecoration(
+--                                            color: Colors.grey.withOpacity(0.15),
+--                                            borderRadius:
+--                                                BorderRadius.circular(6),
+--                                          ),
+--                                          child: Text(
+--                                            product.categoryName,
+--                                            style: const TextStyle(
+--                                              fontFamily: 'Poppins',
+--                                              fontSize: 12,
+--                                              color: Colors.grey,
+--                                            ),
+--                                          ),
+--                                        ),
+--                                      ],
+--                                    ),
+-+                                        )
+-+                                        .toList(),
+-                                   ),
+-                                 ],
+-                               ),
 --                            );
 --                          },
--+                      Container(
--+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
--+                        decoration: BoxDecoration(
--+                          color: product.type == 'produk'
--+                              ? Colors.orange.withOpacity(0.15)
--+                              : Colors.blue.withOpacity(0.15),
--+                          borderRadius: BorderRadius.circular(6),
--+                        ),
--+                        child: Text(
--+                          product.type == 'jasa' ? 'Jasa' : 'Produk',
--+                          style: TextStyle(
--+                            fontFamily: 'Poppins',
--+                            fontWeight: FontWeight.bold,
--+                            fontSize: 12,
--+                            color: product.type == 'produk'
--+                                ? Colors.orange
--+                                : Colors.blue,
+--                        ),
+--                ),
+--              ],
+--            ),
+-+                            ),
+-+                          Expanded(
+-+                            child: viewModel.filteredProducts.isEmpty
+-+                                ? const Center(
+-+                                    child: Text(
+-+                                      'Tidak ada produk atau jasa ditemukan.',
+-+                                      style: TextStyle(
+-+                                        fontFamily: 'Poppins',
+-+                                        color: Colors.grey,
+-+                                      ),
+-+                                    ),
+-+                                  )
+-+                                : GridView.builder(
+-+                                    padding: const EdgeInsets.all(16),
+-+                                    gridDelegate:
+-+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+-+                                      crossAxisCount: 2,
+-+                                      childAspectRatio: 0.75,
+-+                                      crossAxisSpacing: 16,
+-+                                      mainAxisSpacing: 16,
+-+                                    ),
+-+                                    itemCount: viewModel.filteredProducts.length,
+-+                                    itemBuilder: (context, index) {
+-+                                      final product = viewModel.filteredProducts[index];
+-+                                      return CustomCard(
+-+                                        padding: EdgeInsets.zero,
+-+                                        child: Column(
+-+                                          crossAxisAlignment: CrossAxisAlignment.start,
+-+                                          children: [
+-+                                            Expanded(
+-+                                              child: ProductCard(
+-+                                                product: product,
+-+                                                onTap: () {
+-+                                                  Navigator.push(
+-+                                                    context,
+-+                                                    MaterialPageRoute(
+-+                                                      builder: (_) =>
+-+                                                          ProductDetailPage(product: product),
+-+                                                    ),
+-+                                                  );
+-+                                                },
+-+                                              ),
+-+                                            ),
+-+                                            Padding(
+-+                                              padding: const EdgeInsets.symmetric(
+-+                                                  horizontal: 8, vertical: 4),
+-+                                              child: Row(
+-+                                                children: [
+-+                                                  Container(
+-+                                                    padding: const EdgeInsets.symmetric(
+-+                                                        horizontal: 8, vertical: 2),
+-+                                                    decoration: BoxDecoration(
+-+                                                      color: product.type.toLowerCase() == 'produk'
+-+                                                          ? Colors.orange.withOpacity(0.15)
+-+                                                          : Colors.blue.withOpacity(0.15),
+-+                                                      borderRadius:
+-+                                                          BorderRadius.circular(6),
+-+                                                    ),
+-+                                                    child: Text(
+-+                                                      product.type,
+-+                                                      style: TextStyle(
+-+                                                        fontFamily: 'Poppins',
+-+                                                        fontWeight: FontWeight.bold,
+-+                                                        fontSize: 12,
+-+                                                        color: product.type.toLowerCase() == 'produk'
+-+                                                            ? Colors.orange
+-+                                                            : Colors.blue,
+-+                                                      ),
+-+                                                    ),
+-+                                                  ),
+-+                                                  const SizedBox(width: 6),
+-+                                                  Container(
+-+                                                    padding: const EdgeInsets.symmetric(
+-+                                                        horizontal: 8, vertical: 2),
+-+                                                    decoration: BoxDecoration(
+-+                                                      color: Colors.grey.withOpacity(0.15),
+-+                                                      borderRadius:
+-+                                                          BorderRadius.circular(6),
+-+                                                    ),
+-+                                                    child: Text(
+-+                                                      product.categoryName,
+-+                                                      style: const TextStyle(
+-+                                                        fontFamily: 'Poppins',
+-+                                                        fontSize: 12,
+-+                                                        color: Colors.grey,
+-+                                                      ),
+-+                                                    ),
+-+                                                  ),
+-+                                                ],
+-+                                              ),
+-+                                            ),
+-+                                          ],
+-+                                        ),
+-+                                      );
+-+                                    },
+-+                                  ),
 -+                          ),
--                         ),
--                       ),
---                      Padding(
---                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
---                        child: Row(
---                          children: [
---                            Container(
---                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
---                              decoration: BoxDecoration(
+-+                        ],
+-+                      ),
+-             bottomNavigationBar: CustomBottomNavBar(currentIndex: 1),
+-           );
+-         },
+-@@ -281,7 +295,7 @@ class ProductSearchDelegate extends SearchDelegate {
+-                             padding: const EdgeInsets.symmetric(
+-                                 horizontal: 8, vertical: 2),
+-                             decoration: BoxDecoration(
+--                              color: product.type == 'Produk'
+-+                              color: product.type.toLowerCase() == 'produk'
+-                                   ? Colors.orange.withOpacity(0.15)
+-                                   : Colors.blue.withOpacity(0.15),
+-                               borderRadius: BorderRadius.circular(6),
+-@@ -292,7 +306,7 @@ class ProductSearchDelegate extends SearchDelegate {
+-                                 fontFamily: 'Poppins',
+-                                 fontWeight: FontWeight.bold,
+-                                 fontSize: 12,
 --                                color: product.type == 'Produk'
---                                    ? Colors.orange.withOpacity(0.15)
---                                    : Colors.blue.withOpacity(0.15),
---                                borderRadius: BorderRadius.circular(6),
---                              ),
---                              child: Text(
---                                product.type,
---                                style: TextStyle(
---                                  fontFamily: 'Poppins',
---                                  fontWeight: FontWeight.bold,
---                                  fontSize: 12,
---                                  color: product.type == 'Produk'
---                                      ? Colors.orange
---                                      : Colors.blue,
---                                ),
---                              ),
---                            ),
---                            const SizedBox(width: 6),
---                            Container(
---                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
---                              decoration: BoxDecoration(
---                                color: Colors.grey.withOpacity(0.15),
---                                borderRadius: BorderRadius.circular(6),
---                              ),
---                              child: Text(
---                                product.categoryName,
---                                style: const TextStyle(
---                                  fontFamily: 'Poppins',
---                                  fontSize: 12,
---                                  color: Colors.grey,
---                                ),
---                              ),
---                            ),
---                          ],
--+                      const SizedBox(width: 6),
--+                      Container(
--+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
--+                        decoration: BoxDecoration(
--+                          color: Colors.grey.withOpacity(0.15),
--+                          borderRadius: BorderRadius.circular(6),
--+                        ),
--+                        child: Text(
--+                          product.categoryName,
--+                          style: const TextStyle(
--+                            fontFamily: 'Poppins',
--+                            fontSize: 12,
--+                            color: Colors.grey,
--+                          ),
--                         ),
--                       ),
--                     ],
--                   ),
---                );
---              },
--+                ),
--+              ],
--             ),
---          );
---        },
---      ),
--+          ),
--+        );
--+      },
--     );
--   }
-- }
--\ No newline at end of file
--diff --git a/pubspec.lock b/pubspec.lock
--index ec058fc..f159e0b 100644
----- a/pubspec.lock
--+++ b/pubspec.lock
--@@ -21,10 +21,10 @@ packages:
--     dependency: transitive
--     description:
--       name: async
---      sha256: d2872f9c19731c2e5f10444b14686eb7cc85c76274bd6c16e1816bff9a3bab63
--+      sha256: "758e6d74e971c3e5aceb4110bfd6698efc7f501675bcfe0c775459a8140750eb"
--       url: "https://pub.dev"
--     source: hosted
---    version: "2.12.0"
--+    version: "2.13.0"
--   boolean_selector:
--     dependency: transitive
--     description:
--@@ -133,10 +133,10 @@ packages:
--     dependency: transitive
--     description:
--       name: fake_async
---      sha256: "6a95e56b2449df2273fd8c45a662d6947ce1ebb7aafe80e550a3f68297f3cacc"
--+      sha256: "5368f224a74523e8d2e7399ea1638b37aecfca824a3cc4dfdf77bf1fa905ac44"
--       url: "https://pub.dev"
--     source: hosted
---    version: "1.3.2"
--+    version: "1.3.3"
--   ffi:
--     dependency: transitive
--     description:
--@@ -300,10 +300,10 @@ packages:
--     dependency: transitive
--     description:
--       name: leak_tracker
---      sha256: c35baad643ba394b40aac41080300150a4f08fd0fd6a10378f8f7c6bc161acec
--+      sha256: "6bb818ecbdffe216e81182c2f0714a2e62b593f4a4f13098713ff1685dfb6ab0"
--       url: "https://pub.dev"
--     source: hosted
---    version: "10.0.8"
--+    version: "10.0.9"
--   leak_tracker_flutter_testing:
--     dependency: transitive
--     description:
--@@ -673,10 +673,10 @@ packages:
--     dependency: transitive
--     description:
--       name: vm_service
---      sha256: "0968250880a6c5fe7edc067ed0a13d4bae1577fe2771dcf3010d52c4a9d3ca14"
--+      sha256: ddfa8d30d89985b96407efce8acbdd124701f96741f2d981ca860662f1c0dc02
--       url: "https://pub.dev"
--     source: hosted
---    version: "14.3.1"
--+    version: "15.0.0"
--   web:
--     dependency: transitive
--     description:
-diff --git a/lib/viewmodels/explore_viewmodel.dart b/lib/viewmodels/explore_viewmodel.dart
-index ed34d11..0823933 100644
---- a/lib/viewmodels/explore_viewmodel.dart
-+++ b/lib/viewmodels/explore_viewmodel.dart
-@@ -1,44 +1,20 @@
- import 'package:flutter/material.dart';
- import 'package:homedaily_mvvm/models/product.dart';
-+import 'package:homedaily_mvvm/services/api_service.dart';
+-+                                color: product.type.toLowerCase() == 'produk'
+-                                     ? Colors.orange
+-                                     : Colors.blue,
+-                               ),
+diff --git a/lib/views/screens/login_page.dart b/lib/views/screens/login_page.dart
+index ee7981e..f022eae 100644
+--- a/lib/views/screens/login_page.dart
++++ b/lib/views/screens/login_page.dart
+@@ -173,6 +173,13 @@ class _LoginPageState extends State<LoginPage> {
+                                           );
  
- class ExploreViewModel extends ChangeNotifier {
--  final List<Product> _products = [
--    Product(
--      id: 1,
--      name: 'Meja Minimalis',
--      description: 'Meja kayu berkualitas tinggi',
--      price: '247.50',
--      stock: 5,
--      categoryName: 'Produk',
--      images: ['https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc'],
--    ),
--    Product(
--      id: 2,
--      name: 'Lampu Kuning Cantik',
--      description: 'Lampu dekorasi estetik',
--      price: '247.50',
--      stock: 10,
--      categoryName: 'Produk',
--      images: ['https://images.unsplash.com/photo-1586023492125-27b2c045efd7'],
--    ),
--    Product(
--      id: 3,
--      name: 'Cleaning Service',
--      description: 'Jasa cleaning service profesional',
--      price: '500.00',
--      stock: 0,
--      categoryName: 'Jasa',
--      images: ['https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d'],
--    ),
--  ];
-+  final ApiService _apiService = ApiService();
- 
-+  List<Product> _products = [];
-   final List<String> _filters = ['All', 'Produk', 'Jasa'];
-   String _selectedFilter = 'All';
-   final List<String> _searchHistory = [];
-   List<Product> _filteredProducts = [];
-+  bool _isLoading = false;
-+  String? _errorMessage;
- 
-   ExploreViewModel() {
--    _filteredProducts = _products;
-+    fetchProducts();
-   }
- 
-   List<Product> get products => _products;
-@@ -46,6 +22,25 @@ class ExploreViewModel extends ChangeNotifier {
-   List<String> get filters => _filters;
-   String get selectedFilter => _selectedFilter;
-   List<String> get searchHistory => _searchHistory;
-+  bool get isLoading => _isLoading;
-+  String? get errorMessage => _errorMessage;
-+
-+  Future<void> fetchProducts() async {
-+    _isLoading = true;
-+    _errorMessage = null;
-+    notifyListeners();
-+    try {
-+      _products = await _apiService.fetchProducts();
-+      filterProducts('');
-+    } catch (e) {
-+      _errorMessage = e.toString();
-+      _products = [];
-+      _filteredProducts = [];
-+      notifyListeners();
-+    }
-+    _isLoading = false;
-+    notifyListeners();
-+  }
- 
-   void updateFilter(String filter) {
-     if (_filters.contains(filter)) {
-@@ -56,20 +51,22 @@ class ExploreViewModel extends ChangeNotifier {
-   }
- 
-   void filterProducts(String query) {
-+    List<Product> baseList;
-+    if (_selectedFilter == 'All') {
-+      baseList = _products;
-+    } else {
-+      baseList = _products
-+          .where((product) => product.categoryName.toLowerCase() == _selectedFilter.toLowerCase())
-+          .toList();
-+    }
-+
-     if (query.isEmpty) {
--      if (_selectedFilter == 'All') {
--        _filteredProducts = _products;
--      } else {
--        _filteredProducts = _products
--            .where((product) => product.categoryName == _selectedFilter)
--            .toList();
--      }
-+      _filteredProducts = baseList;
-     } else {
--      _filteredProducts = _products
-+      _filteredProducts = baseList
-           .where((product) =>
-               product.name.toLowerCase().contains(query.toLowerCase()) ||
--              (product.description?.toLowerCase().contains(query.toLowerCase()) ??
--                  false))
-+              (product.description?.toLowerCase().contains(query.toLowerCase()) ?? false))
-           .toList();
-     }
-     notifyListeners();
-@@ -86,4 +83,4 @@ class ExploreViewModel extends ChangeNotifier {
-     _searchHistory.remove(query);
-     notifyListeners();
-   }
--}
-+}
-\ No newline at end of file
-diff --git a/lib/views/screens/explore_page.dart b/lib/views/screens/explore_page.dart
-index 5bcedc1..0d6b1cc 100644
---- a/lib/views/screens/explore_page.dart
-+++ b/lib/views/screens/explore_page.dart
-@@ -38,162 +38,176 @@ class ExplorePage extends StatelessWidget {
-                 ),
-               ],
-             ),
--            body: Column(
--              children: [
--                Padding(
--                  padding: const EdgeInsets.all(16),
--                  child: DropdownButton<String>(
--                    isExpanded: true,
--                    value: viewModel.selectedFilter,
--                    items: viewModel.filters
--                        .map(
--                          (filter) => DropdownMenuItem(
--                            value: filter,
--                            child: Text(
--                              filter,
--                              style: const TextStyle(
--                                fontFamily: 'Poppins',
--                              ),
--                            ),
--                          ),
--                        )
--                        .toList(),
--                    onChanged: (value) {
--                      if (value != null) {
--                        viewModel.updateFilter(value);
--                      }
--                    },
--                  ),
--                ),
--                if (viewModel.searchHistory.isNotEmpty)
--                  Padding(
--                    padding: const EdgeInsets.symmetric(horizontal: 16),
--                    child: Column(
--                      crossAxisAlignment: CrossAxisAlignment.start,
--                      children: [
--                        const Text(
--                          'Recent Searches',
--                          style: TextStyle(
-+            body: viewModel.isLoading
-+                ? const Center(child: CircularProgressIndicator())
-+                : viewModel.errorMessage != null
-+                    ? Center(
-+                        child: Text(
-+                          viewModel.errorMessage!,
-+                          style: const TextStyle(
-                             fontFamily: 'Poppins',
--                            fontWeight: FontWeight.bold,
-+                            color: Colors.red,
-                           ),
-                         ),
--                        Wrap(
--                          spacing: 8,
--                          children: viewModel.searchHistory
--                              .map(
--                                (query) => Chip(
--                                  label: Text(
--                                    query,
--                                    style: const TextStyle(
--                                      fontFamily: 'Poppins',
-+                      )
-+                    : Column(
-+                        children: [
-+                          Padding(
-+                            padding: const EdgeInsets.all(16),
-+                            child: DropdownButton<String>(
-+                              isExpanded: true,
-+                              value: viewModel.selectedFilter,
-+                              items: viewModel.filters
-+                                  .map(
-+                                    (filter) => DropdownMenuItem(
-+                                      value: filter,
-+                                      child: Text(
-+                                        filter,
-+                                        style: const TextStyle(
-+                                          fontFamily: 'Poppins',
-+                                        ),
-+                                      ),
-                                     ),
--                                  ),
--                                  onDeleted: () =>
--                                      viewModel.removeSearchHistory(query),
--                                ),
--                              )
--                              .toList(),
--                        ),
--                      ],
--                    ),
--                  ),
--                Expanded(
--                  child: viewModel.filteredProducts.isEmpty
--                      ? const Center(
--                          child: Text(
--                            'Tidak ada produk atau jasa ditemukan.',
--                            style: TextStyle(
--                              fontFamily: 'Poppins',
--                              color: Colors.grey,
-+                                  )
-+                                  .toList(),
-+                              onChanged: (value) {
-+                                if (value != null) {
-+                                  viewModel.updateFilter(value);
-+                                }
-+                              },
-                             ),
-                           ),
--                        )
--                      : GridView.builder(
--                          padding: const EdgeInsets.all(16),
--                          gridDelegate:
--                              const SliverGridDelegateWithFixedCrossAxisCount(
--                            crossAxisCount: 2,
--                            childAspectRatio: 0.75,
--                            crossAxisSpacing: 16,
--                            mainAxisSpacing: 16,
--                          ),
--                          itemCount: viewModel.filteredProducts.length,
--                          itemBuilder: (context, index) {
--                            final product = viewModel.filteredProducts[index];
--                            return CustomCard(
--                              padding: EdgeInsets.zero,
-+                          if (viewModel.searchHistory.isNotEmpty)
-+                            Padding(
-+                              padding: const EdgeInsets.symmetric(horizontal: 16),
-                               child: Column(
-                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                 children: [
--                                  Expanded(
--                                    child: ProductCard(
--                                      product: product,
--                                      onTap: () {
--                                        Navigator.push(
--                                          context,
--                                          MaterialPageRoute(
--                                            builder: (_) =>
--                                                ProductDetailPage(product: product),
--                                          ),
--                                        );
--                                      },
-+                                  const Text(
-+                                    'Recent Searches',
-+                                    style: TextStyle(
-+                                      fontFamily: 'Poppins',
-+                                      fontWeight: FontWeight.bold,
-                                     ),
-                                   ),
--                                  Padding(
--                                    padding: const EdgeInsets.symmetric(
--                                        horizontal: 8, vertical: 4),
--                                    child: Row(
--                                      children: [
--                                        Container(
--                                          padding: const EdgeInsets.symmetric(
--                                              horizontal: 8, vertical: 2),
--                                          decoration: BoxDecoration(
--                                            color: product.type == 'Produk'
--                                                ? Colors.orange.withOpacity(0.15)
--                                                : Colors.blue.withOpacity(0.15),
--                                            borderRadius:
--                                                BorderRadius.circular(6),
--                                          ),
--                                          child: Text(
--                                            product.type,
--                                            style: const TextStyle(
--                                              fontFamily: 'Poppins',
--                                              fontWeight: FontWeight.bold,
--                                              fontSize: 12,
--                                              color: Colors.orange,
-+                                  Wrap(
-+                                    spacing: 8,
-+                                    children: viewModel.searchHistory
-+                                        .map(
-+                                          (query) => Chip(
-+                                            label: Text(
-+                                              query,
-+                                              style: const TextStyle(
-+                                                fontFamily: 'Poppins',
+                                           if (success && context.mounted) {
++                                            ScaffoldMessenger.of(context).showSnackBar(
++                                              const SnackBar(
++                                                content: Text('Login berhasil!'),
++                                                backgroundColor: Colors.green,
++                                                duration: Duration(milliseconds: 1200),
 +                                              ),
-                                             ),
-+                                            onDeleted: () =>
-+                                                viewModel.removeSearchHistory(query),
-                                           ),
--                                        ),
--                                        const SizedBox(width: 6),
--                                        Container(
--                                          padding: const EdgeInsets.symmetric(
--                                              horizontal: 8, vertical: 2),
--                                          decoration: BoxDecoration(
--                                            color: Colors.grey.withOpacity(0.15),
--                                            borderRadius:
--                                                BorderRadius.circular(6),
--                                          ),
--                                          child: Text(
--                                            product.categoryName,
--                                            style: const TextStyle(
--                                              fontFamily: 'Poppins',
--                                              fontSize: 12,
--                                              color: Colors.grey,
--                                            ),
--                                          ),
--                                        ),
--                                      ],
--                                    ),
-+                                        )
-+                                        .toList(),
-                                   ),
-                                 ],
-                               ),
--                            );
--                          },
--                        ),
--                ),
--              ],
--            ),
++                                            );
+                                             Navigator.pushReplacement(
+                                               context,
+                                               MaterialPageRoute(
+@@ -246,6 +253,13 @@ class _LoginPageState extends State<LoginPage> {
+                           try {
+                             final success = await viewModel.signInWithGoogle();
+                             if (success && context.mounted) {
++                              // Tampilkan snackbar sukses
++                              ScaffoldMessenger.of(context).showSnackBar(
++                                const SnackBar(
++                                  content: Text('Login berhasil!'),
++                                  backgroundColor: Colors.green,
++                                ),
++                              );
+                               Navigator.pushReplacement(
+                                 context,
+                                 MaterialPageRoute(
+diff --git a/lib/views/screens/profile_page.dart b/lib/views/screens/profile_page.dart
+index 6eb0ef7..32e0ea6 100644
+--- a/lib/views/screens/profile_page.dart
++++ b/lib/views/screens/profile_page.dart
+@@ -98,8 +98,28 @@ class ProfilePage extends StatelessWidget {
+                         fontFamily: 'Poppins',
+                       ),
+                     ),
+-                    onTap: () {
+-                      Navigator.pushReplacementNamed(context, '/login');
++                    onTap: () async {
++                      final shouldLogout = await showDialog<bool>(
++                        context: context,
++                        builder: (context) => AlertDialog(
++                          title: const Text('Konfirmasi Logout'),
++                          content: const Text('Apakah Anda yakin ingin logout?'),
++                          actions: [
++                            TextButton(
++                              onPressed: () => Navigator.pop(context, false),
++                              child: const Text('Batal'),
 +                            ),
-+                          Expanded(
-+                            child: viewModel.filteredProducts.isEmpty
-+                                ? const Center(
-+                                    child: Text(
-+                                      'Tidak ada produk atau jasa ditemukan.',
-+                                      style: TextStyle(
-+                                        fontFamily: 'Poppins',
-+                                        color: Colors.grey,
-+                                      ),
-+                                    ),
-+                                  )
-+                                : GridView.builder(
-+                                    padding: const EdgeInsets.all(16),
-+                                    gridDelegate:
-+                                        const SliverGridDelegateWithFixedCrossAxisCount(
-+                                      crossAxisCount: 2,
-+                                      childAspectRatio: 0.75,
-+                                      crossAxisSpacing: 16,
-+                                      mainAxisSpacing: 16,
-+                                    ),
-+                                    itemCount: viewModel.filteredProducts.length,
-+                                    itemBuilder: (context, index) {
-+                                      final product = viewModel.filteredProducts[index];
-+                                      return CustomCard(
-+                                        padding: EdgeInsets.zero,
-+                                        child: Column(
-+                                          crossAxisAlignment: CrossAxisAlignment.start,
-+                                          children: [
-+                                            Expanded(
-+                                              child: ProductCard(
-+                                                product: product,
-+                                                onTap: () {
-+                                                  Navigator.push(
-+                                                    context,
-+                                                    MaterialPageRoute(
-+                                                      builder: (_) =>
-+                                                          ProductDetailPage(product: product),
-+                                                    ),
-+                                                  );
-+                                                },
-+                                              ),
-+                                            ),
-+                                            Padding(
-+                                              padding: const EdgeInsets.symmetric(
-+                                                  horizontal: 8, vertical: 4),
-+                                              child: Row(
-+                                                children: [
-+                                                  Container(
-+                                                    padding: const EdgeInsets.symmetric(
-+                                                        horizontal: 8, vertical: 2),
-+                                                    decoration: BoxDecoration(
-+                                                      color: product.type.toLowerCase() == 'produk'
-+                                                          ? Colors.orange.withOpacity(0.15)
-+                                                          : Colors.blue.withOpacity(0.15),
-+                                                      borderRadius:
-+                                                          BorderRadius.circular(6),
-+                                                    ),
-+                                                    child: Text(
-+                                                      product.type,
-+                                                      style: TextStyle(
-+                                                        fontFamily: 'Poppins',
-+                                                        fontWeight: FontWeight.bold,
-+                                                        fontSize: 12,
-+                                                        color: product.type.toLowerCase() == 'produk'
-+                                                            ? Colors.orange
-+                                                            : Colors.blue,
-+                                                      ),
-+                                                    ),
-+                                                  ),
-+                                                  const SizedBox(width: 6),
-+                                                  Container(
-+                                                    padding: const EdgeInsets.symmetric(
-+                                                        horizontal: 8, vertical: 2),
-+                                                    decoration: BoxDecoration(
-+                                                      color: Colors.grey.withOpacity(0.15),
-+                                                      borderRadius:
-+                                                          BorderRadius.circular(6),
-+                                                    ),
-+                                                    child: Text(
-+                                                      product.categoryName,
-+                                                      style: const TextStyle(
-+                                                        fontFamily: 'Poppins',
-+                                                        fontSize: 12,
-+                                                        color: Colors.grey,
-+                                                      ),
-+                                                    ),
-+                                                  ),
-+                                                ],
-+                                              ),
-+                                            ),
-+                                          ],
-+                                        ),
-+                                      );
-+                                    },
-+                                  ),
-+                          ),
-+                        ],
-+                      ),
-             bottomNavigationBar: CustomBottomNavBar(currentIndex: 1),
-           );
-         },
-@@ -281,7 +295,7 @@ class ProductSearchDelegate extends SearchDelegate {
-                             padding: const EdgeInsets.symmetric(
-                                 horizontal: 8, vertical: 2),
-                             decoration: BoxDecoration(
--                              color: product.type == 'Produk'
-+                              color: product.type.toLowerCase() == 'produk'
-                                   ? Colors.orange.withOpacity(0.15)
-                                   : Colors.blue.withOpacity(0.15),
-                               borderRadius: BorderRadius.circular(6),
-@@ -292,7 +306,7 @@ class ProductSearchDelegate extends SearchDelegate {
-                                 fontFamily: 'Poppins',
-                                 fontWeight: FontWeight.bold,
-                                 fontSize: 12,
--                                color: product.type == 'Produk'
-+                                color: product.type.toLowerCase() == 'produk'
-                                     ? Colors.orange
-                                     : Colors.blue,
-                               ),
++                            TextButton(
++                              onPressed: () => Navigator.pop(context, true),
++                              child: const Text('Ya'),
++                            ),
++                          ],
++                        ),
++                      );
++                      if (shouldLogout == true && context.mounted) {
++                        // Tambahkan proses logout di sini jika perlu (misal hapus token)
++                        Navigator.pushReplacementNamed(context, '/login');
++                      }
+                     },
+                   ),
+                 ],

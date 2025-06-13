@@ -98,8 +98,28 @@ class ProfilePage extends StatelessWidget {
                         fontFamily: 'Poppins',
                       ),
                     ),
-                    onTap: () {
-                      Navigator.pushReplacementNamed(context, '/login');
+                    onTap: () async {
+                      final shouldLogout = await showDialog<bool>(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text('Konfirmasi Logout'),
+                          content: const Text('Apakah Anda yakin ingin logout?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, false),
+                              child: const Text('Batal'),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, true),
+                              child: const Text('Ya'),
+                            ),
+                          ],
+                        ),
+                      );
+                      if (shouldLogout == true && context.mounted) {
+                        // Tambahkan proses logout di sini jika perlu (misal hapus token)
+                        Navigator.pushReplacementNamed(context, '/login');
+                      }
                     },
                   ),
                 ],

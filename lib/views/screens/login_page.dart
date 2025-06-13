@@ -173,6 +173,13 @@ class _LoginPageState extends State<LoginPage> {
                                           );
 
                                           if (success && context.mounted) {
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              const SnackBar(
+                                                content: Text('Login berhasil!'),
+                                                backgroundColor: Colors.green,
+                                                duration: Duration(milliseconds: 1200),
+                                              ),
+                                            );
                                             Navigator.pushReplacement(
                                               context,
                                               MaterialPageRoute(
@@ -246,6 +253,13 @@ class _LoginPageState extends State<LoginPage> {
                           try {
                             final success = await viewModel.signInWithGoogle();
                             if (success && context.mounted) {
+                              // Tampilkan snackbar sukses
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Login berhasil!'),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
