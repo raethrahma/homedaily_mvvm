@@ -5,6 +5,7 @@ class AuthModel {
   final String? createdAt;
   final String? updatedAt;
   final String? googleId;
+  final String? token;
 
   AuthModel({
     this.id,
@@ -13,9 +14,10 @@ class AuthModel {
     this.createdAt,
     this.updatedAt,
     this.googleId,
+    this.token,
   });
 
-  factory AuthModel.fromJson(Map<String, dynamic> json) {
+  factory AuthModel.fromJson(Map<String, dynamic> json, {String? token}) {
     return AuthModel(
       id: json['user_id'],
       name: json['name'],
@@ -23,6 +25,7 @@ class AuthModel {
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
       googleId: json['google_id'],
+      token: token, // Use passed token instead of json['token']
     );
   }
 }

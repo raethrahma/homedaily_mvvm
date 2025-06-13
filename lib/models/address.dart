@@ -1,39 +1,34 @@
-class Address {
-  final String id;
-  final String name;
-  final String phone;
-  final String address;
-  final String label;
-  final String status;
-  final String type; // 'Rumah', 'Kantor', dll
+class AddressModel {
+  final int addressId;
+  final int userId;
+  final String recipientName;
+  final String phoneNumber;
+  final String fullAddress;
+  final String postalCode;
+  final String city;
+  final String province;
 
-  Address({
-    required this.id,
-    required this.name,
-    required this.phone,
-    required this.address,
-    required this.label,
-    required this.status,
-    required this.type,
+  AddressModel({
+    required this.addressId,
+    required this.userId,
+    required this.recipientName,
+    required this.phoneNumber,
+    required this.fullAddress,
+    required this.postalCode,
+    required this.city,
+    required this.province,
   });
 
-  Address copyWith({
-    String? id,
-    String? name,
-    String? phone,
-    String? address,
-    String? label,
-    String? status,
-    String? type,
-  }) {
-    return Address(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      phone: phone ?? this.phone,
-      address: address ?? this.address,
-      label: label ?? this.label,
-      status: status ?? this.status,
-      type: type ?? this.type,
+  factory AddressModel.fromJson(Map<String, dynamic> json) {
+    return AddressModel(
+      addressId: json['address_id'] ?? 0,
+      userId: json['user_id'] ?? 0,
+      recipientName: json['recipient_name'] ?? '',
+      phoneNumber: json['phone_number'] ?? '',
+      fullAddress: json['full_address'] ?? '',
+      postalCode: json['postal_code'] ?? '',
+      city: json['city'] ?? '',
+      province: json['province'] ?? '',
     );
   }
 }

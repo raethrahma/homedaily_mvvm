@@ -51,33 +51,34 @@ class ExploreViewModel extends ChangeNotifier {
   }
 
   void filterProducts(String query) {
-    List<Product> baseList;
-    if (_selectedFilter == 'All') {
-      baseList = _products;
-    } else {
-      baseList = _products
-          .where((product) => product.categoryName.toLowerCase() == _selectedFilter.toLowerCase())
-          .toList();
-    }
-
     if (query.isEmpty) {
-      _filteredProducts = baseList;
+      if (_selectedFilter == 'All') {
+        _filteredProducts = _products;
+      } else {
+        _filteredProducts = _products
+            .where((product) => product.categoryName == _selectedFilter)
+            .toList();
+      }
     } else {
-      _filteredProducts = baseList
+      _filteredProducts = _products
           .where((product) =>
               product.name.toLowerCase().contains(query.toLowerCase()) ||
-              (product.description?.toLowerCase().contains(query.toLowerCase()) ?? false))
+              (product.description?.toLowerCase().contains(query.toLowerCase()) ??
+                  false))
           .toList();
     }
     notifyListeners();
   }
 
-  void addToSearchHistory(String query) {
-    if (query.isNotEmpty && !_searchHistory.contains(query)) {
-      _searchHistory.add(query);
-      notifyListeners();
+void addToSearchHistory(String query) {
+  if (query.isNotEmpty && !_searchHistory.contains(query)) {
+    _searchHistory.insert(0, query); // Add to beginning of list
+    if (_searchHistory.length > 5) { // Keep only last 5 searches
+      _searchHistory.removeLast();
     }
+    notifyListeners();
   }
+}
 
   void removeSearchHistory(String query) {
     _searchHistory.remove(query);

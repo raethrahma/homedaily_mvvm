@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import '../models/auth_model.dart';
 import '../services/auth_service.dart';
 import '../services/google_auth_service.dart';
+import '../services/token_manager.dart';
 
 class AuthViewModel extends ChangeNotifier {
   final AuthService _authService = AuthService();
   final GoogleAuthService _googleAuthService = GoogleAuthService();
+  final TokenManager _tokenManager = TokenManager();
   bool _isLoading = false;
   String? _error;
   AuthModel? _currentUser;
@@ -45,21 +47,19 @@ class AuthViewModel extends ChangeNotifier {
       _error = null;
       notifyListeners();
 
-      final response = await _authService.login(email, password);
-      _currentUser = response;
+      _currentUser = await _authService.login(email, password);
+      
+      // Debug print untuk memastikan token tersimpan
+      final token = await _tokenManager.getToken();
+      print('Debug: Token after login: $token');
 
       _isLoading = false;
-      _error = null;
       notifyListeners();
-
       return true;
     } catch (e) {
+      _error = e.toString();
       _isLoading = false;
-      _error = e.toString().replaceAll('Exception: ', '');
       notifyListeners();
-
-      // Print error for debugging
-      print('Login Error: $_error');
       return false;
     }
   }

@@ -26,17 +26,6 @@ class ExplorePage extends StatelessWidget {
                 ),
               ),
               backgroundColor: Colors.orange,
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.search, color: Colors.white),
-                  onPressed: () {
-                    showSearch(
-                      context: context,
-                      delegate: ProductSearchDelegate(viewModel: viewModel),
-                    );
-                  },
-                ),
-              ],
             ),
             body: viewModel.isLoading
                 ? const Center(child: CircularProgressIndicator())

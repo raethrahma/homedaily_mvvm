@@ -1,188 +1,229 @@
 import 'package:flutter/material.dart';
-import 'package:homedaily_mvvm/viewmodels/address_viewmodel.dart';
 import 'package:provider/provider.dart';
+import 'package:homedaily_mvvm/viewmodels/profile_viewmodel.dart';
+import 'package:homedaily_mvvm/models/address.dart';
+import 'package:homedaily_mvvm/views/screens/widgets/add_form_address.dart';
 
-class AddressManagementPage extends StatelessWidget {
+class AddressManagementPage extends StatefulWidget {
   const AddressManagementPage({super.key});
 
   @override
+  State<AddressManagementPage> createState() => _AddressManagementPageState();
+}
+
+class _AddressManagementPageState extends State<AddressManagementPage> {
+  @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => AddressViewModel(),
-      child: Consumer<AddressViewModel>(
-        builder: (context, viewModel, child) {
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text(
-                'Atur Alamat',
-                style: TextStyle(
-                  fontFamily: 'Poppins',
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+    return Consumer<ProfileViewModel>(
+      builder: (context, viewModel, child) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text(
+              'Daftar Alamat',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            centerTitle: true,
+            backgroundColor: Colors.orange,
+          ),
+          body: viewModel.isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : SingleChildScrollView(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Search Bar
+                      TextField(
+                        decoration: InputDecoration(
+                          hintText: 'Cari Alamat',
+                          hintStyle: const TextStyle(fontFamily: 'Poppins'),
+                          prefixIcon:
+                              const Icon(Icons.search, color: Colors.grey),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                          filled: true,
+                          fillColor: Colors.grey.withOpacity(0.1),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      const Text(
+                        'Semua Alamat',
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.orange,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: viewModel.addresses.length,
+                        itemBuilder: (context, index) {
+                          final address = viewModel.addresses[index];
+                          return _buildAddressCard(context, address); // Pass context here
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+          floatingActionButton: FloatingActionButton.extended(
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                builder: (context) => const AddAddressForm(),
+              );
+            },
+            backgroundColor: Colors.orange,
+            icon: const Icon(Icons.add),
+            label: const Text(
+              'Tambah Alamat',
+              style: TextStyle(fontFamily: 'Poppins'),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildAddressCard(BuildContext context, AddressModel address) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 5,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  address.recipientName,
+                  style: const TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-              centerTitle: true,
-              backgroundColor: Colors.deepOrange,
-            ),
-            body: Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: viewModel.addresses.length,
-                    itemBuilder: (context, index) {
-                      final address = viewModel.addresses[index];
-                      return Card(
-                        margin: const EdgeInsets.only(bottom: 16),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    address.name,
-                                    style: const TextStyle(
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap:
-                                        () => viewModel.showEditDialog(
-                                          context,
-                                          index,
-                                        ),
-                                    child: const Text(
-                                      'Edit',
-                                      style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        color: Colors.blue,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                address.phone,
-                                style: const TextStyle(
-                                  fontFamily: 'Poppins',
-                                  color: Colors.grey,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                address.address,
-                                style: const TextStyle(fontFamily: 'Poppins'),
-                              ),
-                              const SizedBox(height: 8),
-                              Row(
-                                children: [
-                                  if (address.label.isNotEmpty)
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                        vertical: 4,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: Colors.deepOrange.withOpacity(
-                                          0.1,
-                                        ),
-                                        borderRadius: BorderRadius.circular(4),
-                                      ),
-                                      child: Text(
-                                        address.label,
-                                        style: const TextStyle(
-                                          fontFamily: 'Poppins',
-                                          color: Colors.deepOrange,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  if (address.type.isNotEmpty) ...[
-                                    const SizedBox(width: 8),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                        vertical: 4,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: Colors.blue.withOpacity(0.1),
-                                        borderRadius: BorderRadius.circular(4),
-                                      ),
-                                      child: Text(
-                                        address.type,
-                                        style: const TextStyle(
-                                          fontFamily: 'Poppins',
-                                          color: Colors.blue,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                  if (address.status == 'Utama') ...[
-                                    const SizedBox(width: 8),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                        vertical: 4,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: Colors.green.withOpacity(0.1),
-                                        borderRadius: BorderRadius.circular(4),
-                                      ),
-                                      child: Text(
-                                        address.status,
-                                        style: const TextStyle(
-                                          fontFamily: 'Poppins',
-                                          color: Colors.green,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ],
-                              ),
-                            ],
+              Row(
+                children: [
+                  // Edit Button
+                  IconButton(
+                    icon: const Icon(Icons.edit, color: Colors.orange),
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (context) => Padding(
+                          padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom,
+                          ),
+                          child: AddAddressForm(
+                            isEditing: true,
+                            address: address,
                           ),
                         ),
                       );
                     },
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.deepOrange,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      onPressed: () => viewModel.showAddDialog(context),
-                      child: const Text(
-                        'Tambah Alamat Baru',
-                        style: TextStyle(
-                          fontFamily: 'Poppins',
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
+                  // Delete Button
+                  IconButton(
+                    icon: const Icon(Icons.delete, color: Colors.red),
+                    onPressed: () async {
+                      final confirm = await showDialog<bool>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Konfirmasi'),
+                            content: const Text('Apakah Anda yakin ingin menghapus alamat ini?'),
+                            actions: <Widget>[
+                              TextButton(
+                                child: const Text('Batal'),
+                                onPressed: () => Navigator.of(context).pop(false),
+                              ),
+                              TextButton(
+                                child: const Text(
+                                  'Hapus',
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                                onPressed: () => Navigator.of(context).pop(true),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+
+                      if (confirm == true && mounted) {
+                        final viewModel = context.read<ProfileViewModel>();
+                        setState(() {}); // Add this to trigger rebuild
+                        final success = await viewModel.deleteAddress(address.addressId);
+                        
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                success ? 'Alamat berhasil dihapus' : 'Gagal menghapus alamat',
+                              ),
+                              backgroundColor: success ? Colors.green : Colors.red,
+                            ),
+                          );
+                          // Refresh the page after deletion
+                          if (success) {
+                            viewModel.loadProfile();
+                          }
+                        }
+                      }
+                    },
                   ),
-                ),
-              ],
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Text(
+            address.phoneNumber,
+            style: const TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 14,
+              color: Colors.grey,
             ),
-          );
-        },
+          ),
+          const SizedBox(height: 8),
+          Text(
+            address.fullAddress,
+            style: const TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 14,
+            ),
+          ),
+          Text(
+            '${address.city}, ${address.province} ${address.postalCode}',
+            style: const TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 14,
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:homedaily_mvvm/viewmodels/auth_viewmodel.dart';
 import 'package:homedaily_mvvm/views/screens/register_page.dart';
 import 'package:homedaily_mvvm/views/screens/home_page.dart';
+import 'package:homedaily_mvvm/views/screens/profile_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -138,7 +139,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             onPressed: () {
                               setState(() {
-                                _obscurePassword = !_obscurePassword;
+                                _obscurePassword = !_obscurePassword; 
                               });
                             },
                           ),
@@ -161,63 +162,59 @@ class _LoginPageState extends State<LoginPage> {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            onPressed:
-                                viewModel.isLoading
-                                    ? null
-                                    : () async {
-                                      if (_formKey.currentState!.validate()) {
-                                        try {
-                                          final success = await viewModel.login(
-                                            _emailController.text.trim(),
-                                            _passwordController.text,
-                                          );
+                            onPressed: viewModel.isLoading
+                              ? null
+                              : () async {
+                                  if (_formKey.currentState!.validate()) {
+                                    try {
+                                      final success = await viewModel.login(
+                                        _emailController.text,
+                                        _passwordController.text,
+                                      );
 
-                                          if (success && context.mounted) {
-                                            ScaffoldMessenger.of(context).showSnackBar(
-                                              const SnackBar(
-                                                content: Text('Login berhasil!'),
-                                                backgroundColor: Colors.green,
-                                                duration: Duration(milliseconds: 1200),
-                                              ),
-                                            );
-                                            Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder:
-                                                    (context) =>
-                                                        const HomePage(),
-                                              ),
-                                            );
-                                          }
-                                        } catch (e) {
-                                          ScaffoldMessenger.of(
-                                            context,
-                                          ).showSnackBar(
-                                            SnackBar(
-                                              content: Text(e.toString()),
-                                              backgroundColor: Colors.red,
-                                            ),
-                                          );
-                                        }
+                                      if (success && context.mounted) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(
+                                            content: Text('Login berhasil!'),
+                                            backgroundColor: Colors.green,
+                                            duration: Duration(milliseconds: 1200),
+                                          ),
+                                        );
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => const HomePage(),
+                                          ),
+                                        );
                                       }
-                                    },
-                            child:
-                                viewModel.isLoading
-                                    ? const SizedBox(
-                                      height: 20,
-                                      width: 20,
-                                      child: CircularProgressIndicator(
-                                        color: Colors.white,
-                                        strokeWidth: 2,
-                                      ),
-                                    )
-                                    : Text(
-                                      'Login',
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
+                                    } catch (e) {
+                                      if (context.mounted) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(
+                                            content: Text(e.toString()),
+                                            backgroundColor: Colors.red,
+                                          ),
+                                        );
+                                      }
+                                    }
+                                  }
+                                },
+                            child: viewModel.isLoading
+                              ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : Text(
+                                  'Login',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
                           );
                         },
                       ),
